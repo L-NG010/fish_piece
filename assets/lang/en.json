@@ -1,5 +1,14 @@
 {
-  "title": "Home Page",
-  "greeting": "Hello, welcome!",
-  "logout": "Logout"
+  "beranda": {
+    "title": "Home",
+    "greeting": "Hello, welcome!",
+    "logout": "Logout"
+  },
+  "login": {
+    "email":"email",
+    "password":"password",
+    "email_hint": "Enter your email",
+    "password_hint": "Enter your password",
+    "login_button": "Login"
+  }
 }

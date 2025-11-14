@@ -6,7 +6,7 @@ class AppTheme {
     textTheme: const TextTheme(
       headlineLarge: TextStyle(
         fontWeight: FontWeight.w700,
-        fontSize: 24,
+        fontSize: 32,
       ),
       titleLarge: TextStyle(
         fontWeight: FontWeight.w600,

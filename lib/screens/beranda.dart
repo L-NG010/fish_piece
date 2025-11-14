@@ -13,15 +13,33 @@ class BerandaPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('title'.tr(), style: textTheme.headlineLarge),
-        centerTitle: true,
+        iconTheme: const IconThemeData(
+          size: 40, 
+          color: Colors.black,
+        ),
+        title: Transform.translate(
+          offset: const Offset(0, 1),
+          child: Text('beranda.title'.tr(), style: textTheme.headlineLarge),
+        ),
+        centerTitle: false,
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: const [
+            DrawerHeader(child: Text("Header")),
+            ListTile(title: Text("Menu 1")),
+            ListTile(title: Text("Menu 2")),
+          ],
+        ),
+      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('greeting'.tr(), style: textTheme.bodyMedium),
+            Text('beranda.greeting'.tr(), style: textTheme.bodyMedium),
             const SizedBox(height: 20),
+
             ElevatedButton(
               onPressed: () {
                 cubit.changeLanguage('id');
@@ -29,6 +47,7 @@ class BerandaPage extends StatelessWidget {
               },
               child: const Text('Indonesia'),
             ),
+
             ElevatedButton(
               onPressed: () {
                 cubit.changeLanguage('en');

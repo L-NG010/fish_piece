@@ -1,5 +1,14 @@
 {
-  "title": "Halaman Utama",
-  "greeting": "Halo, selamat datang!",
-  "logout": "Keluar"
+  "beranda": {
+    "title": "Beranda",
+    "greeting": "Halo, selamat datang!",
+    "logout": "Keluar"
+  },
+  "login": {
+    "email":"email",
+    "password":"kata sandi",
+    "email_hint": "Masukkan email",
+    "password_hint": "Masukkan kata sandi",
+    "login_button": "Masuk"
+  }
 }
