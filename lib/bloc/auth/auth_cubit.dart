@@ -7,32 +7,38 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this.authService) : super(AuthInitial());
 
-  /// Proses login
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
     try {
-      final response = await authService.login(email, password);
+      final String? error = await authService.login(email, password);
+      if (error != null) {
+        emit(AuthError(error));
+        return;
+      }
 
-      final user = response.user;
+      final user = authService.currentUser;
       if (user == null) {
-        emit(AuthError("Login gagal, Paduka."));
+        emit(AuthError("Login gagal, coba lagi."));
         return;
       }
 
       emit(AuthSuccess(user.id));
     } catch (e) {
-      emit(AuthError("Mohon ampun, Paduka… terjadi kesalahan: $e"));
+      emit(AuthError("error: $e"));
     }
   }
 
-  /// Proses logout
   Future<void> logout() async {
     emit(AuthLoading());
     try {
-      await authService.logout();
+      final String? error = await authService.logout();
+      if (error != null) {
+        emit(AuthError(error));
+        return;
+      }
       emit(AuthInitial());
     } catch (e) {
-      emit(AuthError("Mohon ampun, Paduka… gagal logout: $e"));
+      emit(AuthError("logout gagal: $e"));
     }
   }
 }

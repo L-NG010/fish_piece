@@ -2,6 +2,7 @@ import 'package:fish_it_kasir/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Import konfigurasi
 import 'config/supabase_config.dart';
@@ -15,9 +16,6 @@ import 'bloc/auth/auth_cubit.dart';
 // Import screens
 import 'screens/beranda.dart';
 import 'screens/login.dart';
-
-// Import utils
-import 'utils/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,11 +53,13 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           title: AppConfig.appTitle,
           debugShowCheckedModeBanner: AppConfig.showDebugBanner,
-          theme: AppTheme.theme,
+          theme: ThemeData(fontFamily: 'Poppins'),
           locale: state.locale,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
-          home: const LoginPage(),
+          home: Supabase.instance.client.auth.currentUser != null
+              ? const BerandaPage()
+              : const LoginPage(),
         );
       },
     );

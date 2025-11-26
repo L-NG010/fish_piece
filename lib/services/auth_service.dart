@@ -3,24 +3,51 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class AuthService {
   final SupabaseClient client = Supabase.instance.client;
 
-  /// Login
-  Future<AuthResponse> login(String email, String password) async {
-    return await client.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
+  /// Listener status autentikasi (login, logout, refresh token)
+  Stream<AuthState> get authState => client.auth.onAuthStateChange;
+
+  User? get currentUser => client.auth.currentUser;
+
+  Future<String?> login(String email, String password) async {
+    try {
+      await client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      return null;
+    } catch (error) {
+      return _parseError(error);
+    }
+  }
+
+  Future<String?> register(String email, String password,
+      {Map<String, dynamic>? metadata}) async {
+    try {
+      await client.auth.signUp(
+        email: email,
+        password: password,
+        data: metadata, 
+      );
+      return null;
+    } catch (error) {
+      return _parseError(error);
+    }
   }
 
   /// Logout
-  Future<void> logout() async {
-    await client.auth.signOut();
+  Future<String?> logout() async {
+    try {
+      await client.auth.signOut();
+      return null;
+    } catch (error) {
+      return _parseError(error);
+    }
   }
 
-  /// Register
-  Future<AuthResponse> register(String email, String password) async {
-    return await client.auth.signUp(
-      email: email,
-      password: password,
-    );
+  String _parseError(dynamic error) {
+    if (error is AuthException) {
+      return error.message;
+    }
+    return 'Terjadi kesalahan yang tidak diketahui';
   }
 }

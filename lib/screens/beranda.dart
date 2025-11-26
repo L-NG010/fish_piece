@@ -1,61 +1,134 @@
+import 'package:fish_it_kasir/config/app_config.dart';
+import 'package:fish_it_kasir/widgets/cart_summary.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:easy_localization/easy_localization.dart';
-import '../bloc/language/language_cubit.dart';
+import '../services/produk.dart';
+import '../models/produk.dart';
+import '../widgets/card.dart';
+import '../widgets/appbar.dart';
+import '../widgets/drawer.dart';
+import '../widgets/kategori.dart';
 
-class BerandaPage extends StatelessWidget {
+class BerandaPage extends StatefulWidget {
   const BerandaPage({super.key});
 
   @override
+  State<BerandaPage> createState() => _BerandaPageState();
+}
+
+class _BerandaPageState extends State<BerandaPage> {
+  final ProdukService _service = ProdukService();
+  late Future<List<Produk>> futureProduk;
+  Kategori? _kategoriTerpilih;
+
+  @override
+  void initState() {
+    super.initState();
+    futureProduk = _service.getProduk();
+  }
+
+  // Filter produk berdasarkan kategori
+  List<Produk> _filterProduk(List<Produk> semuaProduk) {
+    if (_kategoriTerpilih == null) {
+      return semuaProduk;
+    }
+    return semuaProduk
+        .where((produk) => produk.kategori == _kategoriTerpilih)
+        .toList();
+  }
+
+  Widget _buildLoadingState() {
+    return const Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildErrorState(Object error) {
+    return Center(child: Text("Terjadi kesalahan: $error"));
+  }
+
+  Widget _buildEmptyState() {
+    return const Center(child: Text("Belum ada produk"));
+  }
+
+  Widget _buildProductGrid(List<Produk> products) {
+  return GridView.builder(
+    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+      maxCrossAxisExtent: 200, // Lebar maksimal tiap card
+      childAspectRatio: 2,
+      crossAxisSpacing: 12, // Jarak horizontal
+      mainAxisSpacing: 12, // Jarak vertikal
+    ),
+    itemCount: products.length,
+    itemBuilder: (context, index) {
+      final product = products[index];
+      return CustomCard(
+        nama: product.nama,
+        gambarUrl: product.gambarUrl,
+        harga: product.hargaJual,
+        stok: product.stok,
+        kelangkaan: product.kelangkaan,
+      );
+    },
+  );
+}
+
+  @override
   Widget build(BuildContext context) {
-    final cubit = context.read<LanguageCubit>();
-    final textTheme = Theme.of(context).textTheme;
-
     return Scaffold(
-      appBar: AppBar(
-        iconTheme: const IconThemeData(
-          size: 40, 
-          color: Colors.black,
-        ),
-        title: Transform.translate(
-          offset: const Offset(0, 1),
-          child: Text('beranda.title'.tr(), style: textTheme.headlineLarge),
-        ),
-        centerTitle: false,
+      backgroundColor: Colors.white,
+      drawer: const Sidebar(),
+      appBar: CustomAppBar(
+        title: 'Beranda',
+        icon1: Icons.search,
+        icon2: Icons.filter_list,
       ),
-      drawer: Drawer(
-        child: ListView(
-          children: const [
-            DrawerHeader(child: Text("Header")),
-            ListTile(title: Text("Menu 1")),
-            ListTile(title: Text("Menu 2")),
-          ],
-        ),
-      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: FutureBuilder<List<Produk>>(
+          future: futureProduk,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return _buildLoadingState();
+            }
 
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('beranda.greeting'.tr(), style: textTheme.bodyMedium),
-            const SizedBox(height: 20),
+            if (snapshot.hasError) {
+              return _buildErrorState(snapshot.error!);
+            }
 
-            ElevatedButton(
-              onPressed: () {
-                cubit.changeLanguage('id');
-                context.setLocale(const Locale('id'));
-              },
-              child: const Text('Indonesia'),
-            ),
+            final semuaProduk = snapshot.data ?? [];
 
-            ElevatedButton(
-              onPressed: () {
-                cubit.changeLanguage('en');
-                context.setLocale(const Locale('en'));
-              },
-              child: const Text('English'),
-            ),
-          ],
+            if (semuaProduk.isEmpty) {
+              return _buildEmptyState();
+            }
+
+            final produkTertampil = _filterProduk(semuaProduk);
+
+            return Column(
+              children: [
+                // Widget Kategori Filter
+                KategoriFilter(
+                  kategoriTerpilih: _kategoriTerpilih,
+                  onKategoriChanged: (kategori) {
+                    setState(() {
+                      _kategoriTerpilih = kategori;
+                    });
+                  },
+                ),
+
+                const SizedBox(height: 16),
+
+                // List produk (bukan grid)
+                Expanded(
+                  child: produkTertampil.isEmpty
+                      ? const Center(
+                          child: Text('Tidak ada produk pada kategori ini'),
+                        )
+                      : _buildProductGrid(produkTertampil),
+                ),
+
+
+                CartSummary(totalHarga: 145000),
+              ],
+            );
+          },
         ),
       ),
     );
