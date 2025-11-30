@@ -4,12 +4,18 @@ class KpiCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String value;
+  final double titleSize;
+  final double valueSize;
+  final bool? isPlus;
 
   const KpiCard({
     super.key,
     required this.icon,
     required this.title,
     required this.value,
+    required this.titleSize,
+    required this.valueSize,
+    this.isPlus,
   });
 
   @override
@@ -46,8 +52,8 @@ class KpiCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 14,
+                    style: TextStyle(
+                      fontSize: titleSize,
                       fontWeight: FontWeight.w500,
                       color: Colors.black54,
                     ),
@@ -57,10 +63,10 @@ class KpiCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     value,
-                    style: const TextStyle(
-                      fontSize: 24,
+                    style: TextStyle(
+                      fontSize: valueSize,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: (isPlus == true) ? Colors.green : Colors.black87,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

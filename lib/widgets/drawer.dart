@@ -46,7 +46,7 @@ class Sidebar extends StatelessWidget {
                 _buildMenuItem(
                   icon: Icons.home_outlined,
                   title: "Beranda",
-                  onTap: () => _navigateWithoutAnimation(context, BerandaPage()),
+                  onTap: () => _navigateWithoutAnimation(context, BerandaScreen()),
                 ),
 
                 _buildExpandableMenuItem(

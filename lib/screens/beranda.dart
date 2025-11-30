@@ -12,14 +12,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/beranda/beranda_cubit.dart';
 import '../bloc/beranda/beranda_state.dart';
 
-class BerandaPage extends StatefulWidget {
-  const BerandaPage({super.key});
+class BerandaScreen extends StatefulWidget {
+  const BerandaScreen({super.key});
 
   @override
-  State<BerandaPage> createState() => _BerandaPageState();
+  State<BerandaScreen> createState() => _BerandaScreenState();
 }
 
-class _BerandaPageState extends State<BerandaPage> {
+class _BerandaScreenState extends State<BerandaScreen> {
   Kategori? _kategoriTerpilih;
   String? _selectedKelangkaan;
 

@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
         if (state is AuthSuccess) {
           // Navigasi ke beranda, menggantikan halaman login
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute<void>(builder: (_) => const BerandaPage()),
+            MaterialPageRoute<void>(builder: (_) => const BerandaScreen()),
           );
         } else if (state is AuthError) {
           ScaffoldMessenger.of(

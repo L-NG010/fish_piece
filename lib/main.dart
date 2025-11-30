@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
           home: Supabase.instance.client.auth.currentUser != null
-              ? const BerandaPage()
+              ? const BerandaScreen()
               : const LoginPage(),
         );
       },
