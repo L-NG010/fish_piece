@@ -2,14 +2,14 @@ import 'package:fish_it_kasir/config/app_config.dart';
 import 'package:fish_it_kasir/models/produk.dart';
 import 'package:flutter/material.dart';
 
-class CustomCard extends StatelessWidget {
+class ProdukCard extends StatelessWidget {
   final String nama;
   final String? gambarUrl;
   final double harga;
   final int stok;
   final Kelangkaan kelangkaan;
 
-  const CustomCard({
+  const ProdukCard({
     super.key,
     required this.nama,
     required this.gambarUrl,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppConfig {
+  static const paddingHorizontal = 12.0;
   // Konfigurasi bahasa yang didukung
   static const List<Locale> supportedLocales = [
     Locale('en'),
@@ -23,7 +24,9 @@ class AppColors {
   static const Color oren = Color(0xFFFFAE4C);
   static const Color secret = Color(0xFF38D28F);
   static const Color mythic = Color(0xFFB22132);
+  static const Color legendary = Color(0xFFFFDE59);
   static const Color exclusive = Color(0xFFFF59E1);
   static const Color epic = Color(0xFF9655C5);
+  static const Color uncommon = Color(0xFFBFD641);
 }
 

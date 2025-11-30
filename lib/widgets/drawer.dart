@@ -1,7 +1,22 @@
+import 'package:fish_it_kasir/screens/laporan.dart';
 import 'package:flutter/material.dart';
+import '../screens/beranda.dart';
+import '../screens/dashboard.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
+
+  void _navigateWithoutAnimation(BuildContext context, Widget page) {
+    Navigator.pop(context); // tutup drawer
+    Navigator.pushReplacement(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => page,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +26,6 @@ class Sidebar extends StatelessWidget {
         children: [
           // Header
           Container(
-              // decoration: BoxDecoration(
-              //   border: Border(bottom: BorderSide(width: 1))
-              // ),
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
             child: Row(
@@ -34,20 +46,18 @@ class Sidebar extends StatelessWidget {
                 _buildMenuItem(
                   icon: Icons.home_outlined,
                   title: "Beranda",
-                  onTap: () => Navigator.pop(context),
+                  onTap: () => _navigateWithoutAnimation(context, BerandaPage()),
                 ),
 
                 _buildExpandableMenuItem(
                   icon: Icons.dashboard_outlined,
                   title: "Dashboard",
                   submenu: {
-                    "Dashboard Penjualan": () {
-                      Navigator.pop(context);
-                      // Navigasi ke Dashboard Penjualan
+                    "Dashboard": () {
+                      _navigateWithoutAnimation(context, const DashboardScreen());
                     },
-                    "Dashboard Inventori": () {
-                      Navigator.pop(context);
-                      // Navigasi ke Dashboard Inventori
+                    "Laporan": () {
+                      _navigateWithoutAnimation(context, const LaporanScreen());
                     },
                   },
                 ),
@@ -56,7 +66,7 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.inventory_2_outlined,
                   title: "Produk",
                   onTap: () {
-                    // Navigate to Produk
+                    // contoh nanti: _navigateWithoutAnimation(context, ProdukPage())
                   },
                 ),
 
@@ -64,7 +74,7 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.people_outline,
                   title: "Pelanggan",
                   onTap: () {
-                    // Navigate to Pelanggan
+                    // bikin navigasi di sini jika sudah ada halaman
                   },
                 ),
 
@@ -74,11 +84,9 @@ class Sidebar extends StatelessWidget {
                   submenu: {
                     "User Management": () {
                       Navigator.pop(context);
-                      // Navigasi ke User Management
                     },
                     "System Logs": () {
                       Navigator.pop(context);
-                      // Navigasi ke System Logs
                     },
                   },
                 ),
@@ -87,14 +95,13 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.settings_outlined,
                   title: "Pengaturan",
                   onTap: () {
-                    // Navigate to Pengaturan
+                    Navigator.pop(context);
                   },
                 ),
               ],
             ),
           ),
 
-          // Logout di bagian bawah
           const Divider(height: 1),
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
@@ -103,7 +110,7 @@ class Sidebar extends StatelessWidget {
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
             ),
             onTap: () {
-              // Aksi logout
+              Navigator.pop(context);
             },
           ),
           const SizedBox(height: 20),
@@ -128,7 +135,7 @@ class Sidebar extends StatelessWidget {
     );
   }
 
-  // Menu dengan submenu (expandable)
+  // Menu expandable
   Widget _buildExpandableMenuItem({
     required IconData icon,
     required String title,
@@ -145,7 +152,7 @@ class Sidebar extends StatelessWidget {
           padding: const EdgeInsets.only(left: 40),
           child: ListTile(
             title: Text(entry.key, style: const TextStyle(fontSize: 14)),
-            onTap: entry.value, // Navigasi hanya di submenu
+            onTap: entry.value,
           ),
         );
       }).toList(),

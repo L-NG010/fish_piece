@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -28,9 +29,9 @@ class _LoginPageState extends State<LoginPage> {
     final email = _emailCtrl.text.trim();
     final password = _passwordCtrl.text;
     if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('login.fill_fields'.tr())),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('login.fill_fields'.tr())));
       return;
     }
     context.read<AuthCubit>().login(email, password);
@@ -48,9 +49,9 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute<void>(builder: (_) => const BerandaPage()),
           );
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       child: Scaffold(
@@ -95,7 +96,10 @@ class _LoginPageState extends State<LoginPage> {
                         hintText: "login.email_hint".tr(),
                         border: const OutlineInputBorder(),
                         focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.biru, width: 2),
+                          borderSide: BorderSide(
+                            color: AppColors.biru,
+                            width: 2,
+                          ),
                         ),
                       ),
                     ),
@@ -107,12 +111,28 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(height: 6),
                     TextField(
                       controller: _passwordCtrl,
-                      obscureText: true,
+                      obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         hintText: "login.password_hint".tr(),
                         border: const OutlineInputBorder(),
                         focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColors.biru, width: 2),
+                          borderSide: BorderSide(
+                            color: AppColors.biru,
+                            width: 2,
+                          ),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -140,7 +160,9 @@ class _LoginPageState extends State<LoginPage> {
                                     width: 18,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation(Colors.white),
+                                      valueColor: AlwaysStoppedAnimation(
+                                        Colors.white,
+                                      ),
                                     ),
                                   )
                                 : Text(

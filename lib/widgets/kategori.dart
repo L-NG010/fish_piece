@@ -33,7 +33,6 @@ class _KategoriFilterState extends State<KategoriFilter> {
 
   @override
   Widget build(BuildContext context) {
-    final font = Theme.of(context).textTheme;
     return SizedBox(
       height: 40,
       child: ListView(
@@ -60,7 +59,7 @@ class _KategoriFilterState extends State<KategoriFilter> {
                 ),
                 child: Text(
                   'Semua',
-                  style: font.bodyMedium?.copyWith(
+                  style: TextStyle(
                     fontWeight: widget.kategoriTerpilih == null
                         ? FontWeight.w600
                         : FontWeight.normal,
@@ -97,13 +96,11 @@ class _KategoriFilterState extends State<KategoriFilter> {
                   ),
                   child: Text(
                     _formatNamaKategori(kategori),
-                    style: font.bodyMedium?.copyWith(
+                    style: TextStyle(
                       fontWeight: isSelected
                           ? FontWeight.w600
                           : FontWeight.normal,
-                      color: isSelected
-                          ? AppColors.biru
-                          : AppColors.abu,
+                      color: isSelected ? AppColors.biru : AppColors.abu,
                     ),
                   ),
                 ),

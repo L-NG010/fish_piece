@@ -1,12 +1,16 @@
 import 'package:fish_it_kasir/config/app_config.dart';
 import 'package:fish_it_kasir/widgets/cart_summary.dart';
 import 'package:flutter/material.dart';
-import '../services/produk.dart';
 import '../models/produk.dart';
-import '../widgets/card.dart';
+import '../widgets/produk_card.dart';
 import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
 import '../widgets/kategori.dart';
+import 'package:fish_it_kasir/widgets/search_button.dart';
+import 'package:fish_it_kasir/widgets/popup_kelangkaan.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/beranda/beranda_cubit.dart';
+import '../bloc/beranda/beranda_state.dart';
 
 class BerandaPage extends StatefulWidget {
   const BerandaPage({super.key});
@@ -16,59 +20,50 @@ class BerandaPage extends StatefulWidget {
 }
 
 class _BerandaPageState extends State<BerandaPage> {
-  final ProdukService _service = ProdukService();
-  late Future<List<Produk>> futureProduk;
   Kategori? _kategoriTerpilih;
+  String? _selectedKelangkaan;
 
   @override
   void initState() {
     super.initState();
-    futureProduk = _service.getProduk();
+    context.read<BerandaCubit>().loadProduk();
   }
 
-  // Filter produk berdasarkan kategori
   List<Produk> _filterProduk(List<Produk> semuaProduk) {
-    if (_kategoriTerpilih == null) {
-      return semuaProduk;
+    List<Produk> hasil = semuaProduk;
+
+    if (_kategoriTerpilih != null) {
+      hasil = hasil.where((p) => p.kategori == _kategoriTerpilih).toList();
     }
-    return semuaProduk
-        .where((produk) => produk.kategori == _kategoriTerpilih)
-        .toList();
-  }
 
-  Widget _buildLoadingState() {
-    return const Center(child: CircularProgressIndicator());
-  }
+    if (_selectedKelangkaan != null && _selectedKelangkaan!.isNotEmpty) {
+      hasil = hasil.where((p) => p.kelangkaan == _selectedKelangkaan).toList();
+    }
 
-  Widget _buildErrorState(Object error) {
-    return Center(child: Text("Terjadi kesalahan: $error"));
-  }
-
-  Widget _buildEmptyState() {
-    return const Center(child: Text("Belum ada produk"));
+    return hasil;
   }
 
   Widget _buildProductGrid(List<Produk> products) {
-  return GridView.builder(
-    gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-      maxCrossAxisExtent: 200, // Lebar maksimal tiap card
-      childAspectRatio: 2,
-      crossAxisSpacing: 12, // Jarak horizontal
-      mainAxisSpacing: 12, // Jarak vertikal
-    ),
-    itemCount: products.length,
-    itemBuilder: (context, index) {
-      final product = products[index];
-      return CustomCard(
-        nama: product.nama,
-        gambarUrl: product.gambarUrl,
-        harga: product.hargaJual,
-        stok: product.stok,
-        kelangkaan: product.kelangkaan,
-      );
-    },
-  );
-}
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
+        childAspectRatio: 2,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemCount: products.length,
+      itemBuilder: (context, index) {
+        final product = products[index];
+        return ProdukCard(
+          nama: product.nama,
+          gambarUrl: product.gambarUrl,
+          harga: product.hargaJual,
+          stok: product.stok,
+          kelangkaan: product.kelangkaan,
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,58 +71,65 @@ class _BerandaPageState extends State<BerandaPage> {
       backgroundColor: Colors.white,
       drawer: const Sidebar(),
       appBar: CustomAppBar(
-        title: 'Beranda',
-        icon1: Icons.search,
-        icon2: Icons.filter_list,
+        title: "Beranda",
+        actions: [
+          SearchButton(
+            onSearch: (value) {
+              // bisa disambungkan ke cubit jika ingin
+            },
+          ),
+          PopupKelangkaan(
+            selected: _selectedKelangkaan,
+            onChanged: (value) {
+              setState(() {
+                _selectedKelangkaan = value;
+              });
+            },
+            useIcon: true,
+          ),
+        ],
       ),
+
       body: Padding(
-        padding: const EdgeInsets.all(12),
-        child: FutureBuilder<List<Produk>>(
-          future: futureProduk,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return _buildLoadingState();
+        padding: const EdgeInsets.all(AppConfig.paddingHorizontal),
+        child: BlocBuilder<BerandaCubit, BerandaState>(
+          builder: (context, state) {
+            if (state is BerandaLoading) {
+              return const Center(child: CircularProgressIndicator());
             }
 
-            if (snapshot.hasError) {
-              return _buildErrorState(snapshot.error!);
+            if (state is BerandaError) {
+              return Center(child: Text(state.message));
             }
 
-            final semuaProduk = snapshot.data ?? [];
+            if (state is BerandaLoaded) {
+              final produk = _filterProduk(state.produk);
 
-            if (semuaProduk.isEmpty) {
-              return _buildEmptyState();
+              return Column(
+                children: [
+                  KategoriFilter(
+                    kategoriTerpilih: _kategoriTerpilih,
+                    onKategoriChanged: (kategori) {
+                      setState(() {
+                        _kategoriTerpilih = kategori;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Expanded(
+                    child: produk.isEmpty
+                        ? const Center(child: Text("Tidak ada produk"))
+                        : _buildProductGrid(produk),
+                  ),
+
+                  CartSummary(totalHarga: 145000),
+                ],
+              );
             }
 
-            final produkTertampil = _filterProduk(semuaProduk);
-
-            return Column(
-              children: [
-                // Widget Kategori Filter
-                KategoriFilter(
-                  kategoriTerpilih: _kategoriTerpilih,
-                  onKategoriChanged: (kategori) {
-                    setState(() {
-                      _kategoriTerpilih = kategori;
-                    });
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // List produk (bukan grid)
-                Expanded(
-                  child: produkTertampil.isEmpty
-                      ? const Center(
-                          child: Text('Tidak ada produk pada kategori ini'),
-                        )
-                      : _buildProductGrid(produkTertampil),
-                ),
-
-
-                CartSummary(totalHarga: 145000),
-              ],
-            );
+            return const SizedBox.shrink();
           },
         ),
       ),
