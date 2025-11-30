@@ -1,7 +1,9 @@
 import 'package:fish_it_kasir/screens/laporan.dart';
+import 'package:fish_it_kasir/screens/produk.dart';
 import 'package:flutter/material.dart';
 import '../screens/beranda.dart';
 import '../screens/dashboard.dart';
+import '../screens/pengaturan.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
@@ -66,7 +68,7 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.inventory_2_outlined,
                   title: "Produk",
                   onTap: () {
-                    // contoh nanti: _navigateWithoutAnimation(context, ProdukPage())
+                    _navigateWithoutAnimation(context, ProdukScreen());
                   },
                 ),
 
@@ -95,7 +97,7 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.settings_outlined,
                   title: "Pengaturan",
                   onTap: () {
-                    Navigator.pop(context);
+                    _navigateWithoutAnimation(context, PengaturanScreen());
                   },
                 ),
               ],

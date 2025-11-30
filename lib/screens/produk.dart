@@ -7,19 +7,18 @@ import '../widgets/appbar.dart';
 import '../widgets/drawer.dart';
 import '../widgets/kategori.dart';
 import 'package:fish_it_kasir/widgets/search_button.dart';
-import 'package:fish_it_kasir/widgets/popup_kelangkaan.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/beranda/beranda_cubit.dart';
 import '../bloc/beranda/beranda_state.dart';
 
-class BerandaPage extends StatefulWidget {
-  const BerandaPage({super.key});
+class ProdukScreen extends StatefulWidget {
+  const ProdukScreen({super.key});
 
   @override
-  State<BerandaPage> createState() => _BerandaPageState();
+  State<ProdukScreen> createState() => _ProdukScreenState();
 }
 
-class _BerandaPageState extends State<BerandaPage> {
+class _ProdukScreenState extends State<ProdukScreen> {
   Kategori? _kategoriTerpilih;
   String? _selectedKelangkaan;
 
@@ -71,21 +70,24 @@ class _BerandaPageState extends State<BerandaPage> {
       backgroundColor: Colors.white,
       drawer: const Sidebar(),
       appBar: CustomAppBar(
-        title: "Beranda",
+        title: "Produk",
         actions: [
           SearchButton(
             onSearch: (value) {
               // bisa disambungkan ke cubit jika ingin
             },
           ),
-          PopupKelangkaan(
-            selected: _selectedKelangkaan,
-            onChanged: (value) {
-              setState(() {
-                _selectedKelangkaan = value;
-              });
+          IconButton(
+            icon: const Icon(Icons.inventory),
+            onPressed: () {
+              // 
             },
-            useIcon: true,
+          ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              // 
+            },
           ),
         ],
       ),
