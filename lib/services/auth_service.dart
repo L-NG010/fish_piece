@@ -36,13 +36,13 @@ class AuthService {
 
   /// Logout
   Future<String?> logout() async {
-    try {
-      await client.auth.signOut();
-      return null;
-    } catch (error) {
-      return _parseError(error);
-    }
+  try {
+    await client.auth.signOut();
+    return null;
+  } catch (error) {
+    return _parseError(error);
   }
+}
 
   String _parseError(dynamic error) {
     if (error is AuthException) {

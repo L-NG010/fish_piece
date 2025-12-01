@@ -1,6 +1,12 @@
+import 'package:fish_it_kasir/bloc/auth/auth_cubit.dart';
+import 'package:fish_it_kasir/screens/kelola_petugas.dart';
 import 'package:fish_it_kasir/screens/laporan.dart';
+import 'package:fish_it_kasir/screens/login.dart';
+import 'package:fish_it_kasir/screens/pelanggan.dart';
 import 'package:fish_it_kasir/screens/produk.dart';
+import 'package:fish_it_kasir/screens/register.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../screens/beranda.dart';
 import '../screens/dashboard.dart';
 import '../screens/pengaturan.dart';
@@ -48,7 +54,8 @@ class Sidebar extends StatelessWidget {
                 _buildMenuItem(
                   icon: Icons.home_outlined,
                   title: "Beranda",
-                  onTap: () => _navigateWithoutAnimation(context, BerandaScreen()),
+                  onTap: () =>
+                      _navigateWithoutAnimation(context, BerandaScreen()),
                 ),
 
                 _buildExpandableMenuItem(
@@ -56,7 +63,10 @@ class Sidebar extends StatelessWidget {
                   title: "Dashboard",
                   submenu: {
                     "Dashboard": () {
-                      _navigateWithoutAnimation(context, const DashboardScreen());
+                      _navigateWithoutAnimation(
+                        context,
+                        const DashboardScreen(),
+                      );
                     },
                     "Laporan": () {
                       _navigateWithoutAnimation(context, const LaporanScreen());
@@ -76,7 +86,7 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.people_outline,
                   title: "Pelanggan",
                   onTap: () {
-                    // bikin navigasi di sini jika sudah ada halaman
+                    _navigateWithoutAnimation(context, PelangganScreen());
                   },
                 ),
 
@@ -84,11 +94,11 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.admin_panel_settings_outlined,
                   title: "Admin Panel",
                   submenu: {
-                    "User Management": () {
-                      Navigator.pop(context);
+                    "Kelola Pengguna": () {
+                      _navigateWithoutAnimation(context, KelolaPetugasScreen());
                     },
-                    "System Logs": () {
-                      Navigator.pop(context);
+                    "Registrasi Pengguna": () {
+                      _navigateWithoutAnimation(context, RegisterScreen());
                     },
                   },
                 ),
@@ -105,6 +115,7 @@ class Sidebar extends StatelessWidget {
           ),
 
           const Divider(height: 1),
+
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
             title: const Text(
@@ -112,7 +123,26 @@ class Sidebar extends StatelessWidget {
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
             ),
             onTap: () {
-              Navigator.pop(context);
+              showDialog(
+                context: context,
+                builder: (dialogContext) => _LogoutConfirmationDialog(
+                  onConfirm: () async {
+                    // 1. Tutup dialog
+                    Navigator.pop(dialogContext);
+
+                    // 2. Logout dari Supabase
+                    await context.read<AuthCubit>().logout();
+
+                    // 3. Langsung navigate ke login
+                    if (context.mounted) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (_) => const LoginPage()),
+                        (route) => false,
+                      );
+                    }
+                  },
+                ),
+              );
             },
           ),
           const SizedBox(height: 20),
@@ -158,6 +188,30 @@ class Sidebar extends StatelessWidget {
           ),
         );
       }).toList(),
+    );
+  }
+}
+
+class _LogoutConfirmationDialog extends StatelessWidget {
+  final VoidCallback onConfirm;
+
+  const _LogoutConfirmationDialog({required this.onConfirm});
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text("Konfirmasi Logout"),
+      content: const Text("Apakah Paduka yakin ingin keluar dari aplikasi?"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("Batal"),
+        ),
+        TextButton(
+          onPressed: onConfirm,
+          child: const Text("Logout", style: TextStyle(color: Colors.red)),
+        ),
+      ],
     );
   }
 }

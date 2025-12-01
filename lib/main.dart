@@ -1,10 +1,10 @@
+import 'package:fish_it_kasir/bloc/auth/auth_state.dart';
 import 'package:fish_it_kasir/bloc/beranda/beranda_cubit.dart';
 import 'package:fish_it_kasir/services/auth_service.dart';
 import 'package:fish_it_kasir/services/produk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 // Import konfigurasi
 import 'config/supabase_config.dart';
@@ -60,9 +60,14 @@ class MyApp extends StatelessWidget {
           locale: state.locale,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
-          home: Supabase.instance.client.auth.currentUser != null
-              ? const BerandaScreen()
-              : const LoginPage(),
+          home: BlocBuilder<AuthCubit, AuthState>(
+            builder: (context, state) {
+              if (state is AuthSuccess) {
+                return const BerandaScreen();
+              }
+              return const LoginPage();
+            },
+          ),
         );
       },
     );

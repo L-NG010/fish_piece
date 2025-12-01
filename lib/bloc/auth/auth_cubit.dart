@@ -5,7 +5,9 @@ import '../../services/auth_service.dart';
 class AuthCubit extends Cubit<AuthState> {
   final AuthService authService;
 
-  AuthCubit(this.authService) : super(AuthInitial());
+   AuthCubit(this.authService) : super(AuthLoading()) {
+    checkSession();
+  }
 
   Future<void> login(String email, String password) async {
     emit(AuthLoading());
@@ -39,6 +41,15 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthInitial());
     } catch (e) {
       emit(AuthError("logout gagal: $e"));
+    }
+  }
+
+  Future<void> checkSession() async {
+    final user = authService.currentUser;
+    if (user != null) {
+      emit(AuthSuccess(user.id));
+    } else {
+      emit(AuthInitial());
     }
   }
 }

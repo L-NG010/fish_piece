@@ -1,5 +1,4 @@
 import 'package:fish_it_kasir/config/app_config.dart';
-import 'package:fish_it_kasir/widgets/cart_summary.dart';
 import 'package:flutter/material.dart';
 import '../models/produk.dart';
 import '../widgets/produk_card.dart';
@@ -10,6 +9,7 @@ import 'package:fish_it_kasir/widgets/search_button.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/beranda/beranda_cubit.dart';
 import '../bloc/beranda/beranda_state.dart';
+import '../widgets/produk/cardAddProduk.dart';
 
 class ProdukScreen extends StatefulWidget {
   const ProdukScreen({super.key});
@@ -59,8 +59,17 @@ class _ProdukScreenState extends State<ProdukScreen> {
           harga: product.hargaJual,
           stok: product.stok,
           kelangkaan: product.kelangkaan,
+          isProdukScreen: true,
+          hargaBeli: product.hargaBeli,
         );
       },
+    );
+  }
+
+  void _showTambahProdukDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => const TambahProdukCard(),
     );
   }
 
@@ -78,16 +87,9 @@ class _ProdukScreenState extends State<ProdukScreen> {
             },
           ),
           IconButton(
-            icon: const Icon(Icons.inventory),
-            onPressed: () {
-              // 
-            },
-          ),
-          IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () {
-              // 
-            },
+            onPressed: _showTambahProdukDialog,
+            tooltip: 'Tambah Produk',
           ),
         ],
       ),
@@ -125,12 +127,9 @@ class _ProdukScreenState extends State<ProdukScreen> {
                         ? const Center(child: Text("Tidak ada produk"))
                         : _buildProductGrid(produk),
                   ),
-
-                  CartSummary(totalHarga: 145000),
                 ],
               );
             }
-
             return const SizedBox.shrink();
           },
         ),

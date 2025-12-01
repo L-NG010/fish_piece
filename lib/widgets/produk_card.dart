@@ -8,6 +8,9 @@ class ProdukCard extends StatelessWidget {
   final double harga;
   final int stok;
   final Kelangkaan kelangkaan;
+  final bool? isProdukScreen;
+  final double? hargaBeli;
+  final double? hargaJual;
 
   const ProdukCard({
     super.key,
@@ -16,6 +19,9 @@ class ProdukCard extends StatelessWidget {
     required this.harga,
     required this.stok,
     required this.kelangkaan,
+    this.isProdukScreen,
+    this.hargaBeli,
+    this.hargaJual,
   });
 
   Color _getBadgeColor() {
@@ -24,12 +30,18 @@ class ProdukCard extends StatelessWidget {
         return AppColors.secret;
       case Kelangkaan.mythic:
         return AppColors.mythic;
+      case Kelangkaan.legendary:
+        return AppColors.legendary;
       case Kelangkaan.exclusive:
         return AppColors.exclusive;
       case Kelangkaan.epic:
         return AppColors.epic;
+      case Kelangkaan.rare:
+        return AppColors.biru;
+      case Kelangkaan.uncommon:
+        return AppColors.uncommon;
       default:
-        return Colors.blue;
+        return Colors.white;
     }
   }
 
@@ -57,6 +69,7 @@ class ProdukCard extends StatelessWidget {
   Widget _buildProductContent() {
     return Flexible(
       child: Container(
+        color: Colors.white,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,25 +88,47 @@ class ProdukCard extends StatelessWidget {
                   ),
                 ),
 
-                // Kelangkaan
-                Text(
-                  kelangkaan.toString().split('.').last,
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: _getBadgeColor(),
-                    fontWeight: FontWeight.w500,
+                if (isProdukScreen == true) ...[
+                  // Harga Beli
+                  Text(
+                    'Beli : ${_formatHarga(hargaBeli ?? 0)}',
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
 
-                // Harga
-                Text(
-                  _formatHarga(harga),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 11,
+                  // Harga Jual
+                  Text(
+                    'Jual : ${_formatHarga(harga)}',
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                _buildStockAndCartRow(),
+                ] else ...[
+                  // Kelangkaan
+                  Text(
+                    kelangkaan.toString().split('.').last,
+                    style: TextStyle(
+                      fontSize: 9,
+                      color: _getBadgeColor(),
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+
+                  // Harga Utama
+                  Text(
+                    _formatHarga(harga),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+                _bottomCardSection(),
               ],
             ),
           ],
@@ -103,7 +138,7 @@ class ProdukCard extends StatelessWidget {
   }
 
   // Widget untuk baris stok dan icon cart
-  Widget _buildStockAndCartRow() {
+  Widget _bottomCardSection() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -117,13 +152,43 @@ class ProdukCard extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
-            color: Colors.blue.shade50,
+            color: Colors.white,
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Icon(
-            Icons.shopping_cart_outlined,
-            size: 14,
-            color: AppColors.biru,
+          child: Row(
+            children: [
+              isProdukScreen == true
+                  ? Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.edit,
+                            size: 14,
+                            color: AppColors.biru,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                        ),
+                        SizedBox(width: 4),
+                        IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.delete,
+                            size: 14,
+                            color: AppColors.biru,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                        ),
+                      ],
+                    )
+                  : Icon(
+                      Icons.shopping_cart_outlined,
+                      size: 14,
+                      color: AppColors.biru,
+                    ),
+            ],
           ),
         ),
       ],
