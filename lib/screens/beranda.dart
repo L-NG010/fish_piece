@@ -55,6 +55,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
       itemBuilder: (context, index) {
         final product = products[index];
         return ProdukCard(
+          id: product.id.toString(),
           nama: product.nama,
           gambarUrl: product.gambarUrl,
           harga: product.hargaJual,

@@ -28,13 +28,31 @@ class _LoginPageState extends State<LoginPage> {
   void _submit() {
     final email = _emailCtrl.text.trim();
     final password = _passwordCtrl.text;
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('login.fill_fields'.tr())));
+    
+    if (email.isEmpty) {
+      _showErrorSnackBar('login.email_required'.tr());
       return;
     }
+    
+    if (password.isEmpty) {
+      _showErrorSnackBar('login.password_required'.tr());
+      return;
+    }
+    
     context.read<AuthCubit>().login(email, password);
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+        duration: const Duration(seconds: 2),
+      ),
+    );
   }
 
   @override
@@ -49,9 +67,7 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute<void>(builder: (_) => const BerandaScreen()),
           );
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(state.message)));
+          _showErrorSnackBar(state.message);
         }
       },
       child: Scaffold(
@@ -92,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     TextField(
                       controller: _emailCtrl,
                       keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
                         hintText: "login.email_hint".tr(),
                         border: const OutlineInputBorder(),
@@ -112,6 +129,8 @@ class _LoginPageState extends State<LoginPage> {
                     TextField(
                       controller: _passwordCtrl,
                       obscureText: _obscurePassword,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _submit(),
                       decoration: InputDecoration(
                         hintText: "login.password_hint".tr(),
                         border: const OutlineInputBorder(),

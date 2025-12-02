@@ -3,6 +3,7 @@ import 'package:fish_it_kasir/models/produk.dart';
 import 'package:flutter/material.dart';
 
 class ProdukCard extends StatelessWidget {
+  final String id; // Tambahkan id
   final String nama;
   final String? gambarUrl;
   final double harga;
@@ -11,9 +12,12 @@ class ProdukCard extends StatelessWidget {
   final bool? isProdukScreen;
   final double? hargaBeli;
   final double? hargaJual;
+  final VoidCallback? onEdit; // Callback untuk edit
+  final VoidCallback? onDelete; // Callback untuk delete
 
   const ProdukCard({
     super.key,
+    required this.id,
     required this.nama,
     required this.gambarUrl,
     required this.harga,
@@ -22,6 +26,8 @@ class ProdukCard extends StatelessWidget {
     this.isProdukScreen,
     this.hargaBeli,
     this.hargaJual,
+    this.onEdit,
+    this.onDelete,
   });
 
   Color _getBadgeColor() {
@@ -74,7 +80,6 @@ class ProdukCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Nama produk dan kelangkaan
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -89,7 +94,6 @@ class ProdukCard extends StatelessWidget {
                 ),
 
                 if (isProdukScreen == true) ...[
-                  // Harga Beli
                   Text(
                     'Beli : ${_formatHarga(hargaBeli ?? 0)}',
                     style: TextStyle(
@@ -98,8 +102,6 @@ class ProdukCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-
-                  // Harga Jual
                   Text(
                     'Jual : ${_formatHarga(harga)}',
                     style: TextStyle(
@@ -109,7 +111,6 @@ class ProdukCard extends StatelessWidget {
                     ),
                   ),
                 ] else ...[
-                  // Kelangkaan
                   Text(
                     kelangkaan.toString().split('.').last,
                     style: TextStyle(
@@ -118,8 +119,6 @@ class ProdukCard extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-
-                  // Harga Utama
                   Text(
                     _formatHarga(harga),
                     style: const TextStyle(
@@ -142,13 +141,10 @@ class ProdukCard extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        // Stok
         Text(
           "Stok $stok",
           style: const TextStyle(fontSize: 9, color: Colors.grey),
         ),
-
-        // Icon cart
         Container(
           padding: const EdgeInsets.all(2),
           decoration: BoxDecoration(
@@ -157,37 +153,35 @@ class ProdukCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              isProdukScreen == true
-                  ? Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.edit,
-                            size: 14,
-                            color: AppColors.biru,
-                          ),
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
-                        ),
-                        SizedBox(width: 4),
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.delete,
-                            size: 14,
-                            color: AppColors.biru,
-                          ),
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
-                        ),
-                      ],
-                    )
-                  : Icon(
-                      Icons.shopping_cart_outlined,
-                      size: 14,
-                      color: AppColors.biru,
-                    ),
+              if (isProdukScreen == true) ...[
+                IconButton(
+                  onPressed: onEdit,
+                  icon: Icon(
+                    Icons.edit,
+                    size: 14,
+                    color: AppColors.biru,
+                  ),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                  onPressed: onDelete,
+                  icon: Icon(
+                    Icons.delete,
+                    size: 14,
+                    color: Colors.red,
+                  ),
+                  padding: EdgeInsets.zero,
+                  constraints: const BoxConstraints(),
+                ),
+              ] else ...[
+                Icon(
+                  Icons.shopping_cart_outlined,
+                  size: 14,
+                  color: AppColors.biru,
+                ),
+              ],
             ],
           ),
         ),
@@ -210,12 +204,8 @@ class ProdukCard extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Bagian gambar - KIRI
               _buildProductImage(),
-
               const SizedBox(width: 10),
-
-              // Bagian konten - KANAN
               _buildProductContent(),
             ],
           ),

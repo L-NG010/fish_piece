@@ -1,6 +1,9 @@
 import 'package:fish_it_kasir/bloc/auth/auth_state.dart';
 import 'package:fish_it_kasir/bloc/beranda/beranda_cubit.dart';
+import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_cubit.dart';
+import 'package:fish_it_kasir/bloc/produk/produk_cubit.dart';
 import 'package:fish_it_kasir/services/auth_service.dart';
+import 'package:fish_it_kasir/services/pelanggan.dart';
 import 'package:fish_it_kasir/services/produk.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +42,8 @@ Future<void> main() async {
           BlocProvider(create: (_) => LanguageCubit()),
           BlocProvider(create: (_) => AuthCubit(AuthService())),
           BlocProvider(create: (_) => BerandaCubit(ProdukService())),
+          BlocProvider(create: (_) => ProdukCubit(ProdukService())),
+          BlocProvider(create: (_) => PelangganCubit(PelangganService())),
         ],
         child: const MyApp(),
       ),

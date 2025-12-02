@@ -16,7 +16,7 @@ class AuthService {
       );
       return null;
     } catch (error) {
-      return _parseError(error);
+      return "Email atau password salah";
     }
   }
 

@@ -6,9 +6,13 @@
   },
   "login": {
     "email":"email",
+    "email_required":"Email tidak boleh kosong",
+    "invalid_email":"Email tidak valid",
     "password":"kata sandi",
+    "password_required":"Harap isi kata sandi",
     "email_hint": "Masukkan email",
     "password_hint": "Masukkan kata sandi",
-    "login_button": "Masuk"
+    "login_button": "Masuk",
+    "fill_fields": "Form tidak boleh kosong"
   }
 }
