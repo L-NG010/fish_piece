@@ -10,6 +10,7 @@ class PelangganCubit extends Cubit<PelangganState> {
 
   // Load pelanggan
   Future<void> loadPelanggan({bool forceReload = false}) async {
+    // Match the pattern used in BerandaCubit
     if (!forceReload && state is PelangganLoaded) return;
 
     emit(PelangganLoading());
@@ -26,7 +27,6 @@ class PelangganCubit extends Cubit<PelangganState> {
     required String nama,
     required String usnRoblox,
     String? noWa,
-    required String createdBy,
   }) async {
     emit(PelangganAddInProgress());
     
@@ -35,7 +35,6 @@ class PelangganCubit extends Cubit<PelangganState> {
         nama: nama,
         usnRoblox: usnRoblox,
         noWa: noWa,
-        createdBy: createdBy,
       );
 
       emit(PelangganAddSuccess('Pelanggan "$nama" berhasil ditambahkan'));
@@ -52,7 +51,6 @@ class PelangganCubit extends Cubit<PelangganState> {
     required String nama,
     required String usnRoblox,
     String? noWa,
-    required String updatedBy,
   }) async {
     emit(PelangganEditInProgress());
     
@@ -62,7 +60,6 @@ class PelangganCubit extends Cubit<PelangganState> {
         nama: nama,
         usnRoblox: usnRoblox,
         noWa: noWa,
-        updatedBy: updatedBy,
       );
 
       emit(PelangganEditSuccess('Pelanggan "$nama" berhasil diperbarui', updatedPelanggan));

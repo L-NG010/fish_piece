@@ -28,7 +28,6 @@ class PelangganService {
     required String nama,
     required String usnRoblox,
     String? noWa,
-    required String createdBy,
   }) async {
     try {
       // Validasi username Roblox unik
@@ -42,6 +41,7 @@ class PelangganService {
         throw 'Username Roblox "$usnRoblox" sudah terdaftar. Gunakan username lain.';
       }
 
+      final createdBy = _supabase.auth.currentUser?.id ?? 'system';
       final response = await _supabase
           .from('pelanggan')
           .insert({
@@ -69,7 +69,6 @@ class PelangganService {
     required String nama,
     required String usnRoblox,
     String? noWa,
-    required String updatedBy,
   }) async {
     try {
       // Validasi username Roblox unik (kecuali untuk pelanggan ini sendiri)
@@ -84,6 +83,7 @@ class PelangganService {
         throw 'Username Roblox "$usnRoblox" sudah terdaftar. Gunakan username lain.';
       }
 
+      final updatedBy = _supabase.auth.currentUser?.id ?? 'system';
       final response = await _supabase
           .from('pelanggan')
           .update({
@@ -145,6 +145,27 @@ class PelangganService {
         'total_belanja': 0.0,
         'total_pembelian': 0,
       };
+    }
+  }
+
+  // Get all customers with their statistics
+  Future<List<Map<String, dynamic>>> getAllPelangganWithStats() async {
+    try {
+      final pelangganList = await getPelanggan();
+      List<Map<String, dynamic>> result = [];
+
+      for (var pelanggan in pelangganList) {
+        final stats = await getPelangganStats(pelanggan.id);
+        result.add({
+          'pelanggan': pelanggan,
+          'total_belanja': stats['total_belanja'],
+          'total_pembelian': stats['total_pembelian'],
+        });
+      }
+
+      return result;
+    } catch (e) {
+      throw 'Gagal mengambil data pelanggan dengan statistik: ${e.toString().replaceAll("Exception: ", "")}';
     }
   }
 }

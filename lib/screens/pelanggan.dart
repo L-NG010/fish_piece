@@ -6,7 +6,6 @@ import 'package:fish_it_kasir/widgets/appbar.dart';
 import 'package:fish_it_kasir/widgets/drawer.dart';
 import 'package:fish_it_kasir/widgets/pelanggan_card.dart';
 import 'package:fish_it_kasir/models/pelanggan.dart';
-import 'package:fish_it_kasir/services/pelanggan.dart';
 import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_cubit.dart';
 import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_state.dart';
 import 'package:fish_it_kasir/widgets/pelanggan/tambah_pelanggan_card.dart';
@@ -20,7 +19,6 @@ class PelangganScreen extends StatefulWidget {
 }
 
 class _PelangganScreenState extends State<PelangganScreen> {
-  List<Map<String, dynamic>> _pelangganWithStats = [];
   List<Pelanggan> _lastLoadedPelanggan = [];
 
   @override
@@ -68,11 +66,6 @@ class _PelangganScreenState extends State<PelangganScreen> {
   }
 
   void _showDetailDialog(Pelanggan pelanggan) {
-    final stats = _pelangganWithStats.firstWhere(
-      (item) => (item['pelanggan'] as Pelanggan).id == pelanggan.id,
-      orElse: () => {'total_belanja': 0.0, 'total_pembelian': 0},
-    );
-
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -86,14 +79,6 @@ class _PelangganScreenState extends State<PelangganScreen> {
               _buildDetailRow('Username Roblox', pelanggan.usnRoblox),
               if (pelanggan.noWa != null)
                 _buildDetailRow('No. WhatsApp', pelanggan.noWa!),
-              _buildDetailRow(
-                'Total Belanja',
-                'Rp ${_formatCurrency(stats['total_belanja'] as double)}',
-              ),
-              _buildDetailRow(
-                'Total Pembelian',
-                '${stats['total_pembelian']}x',
-              ),
               _buildDetailRow('Poin', '${pelanggan.poin} poin'),
               _buildDetailRow(
                 'Bergabung',
@@ -131,34 +116,6 @@ class _PelangganScreenState extends State<PelangganScreen> {
     );
   }
 
-  String _formatCurrency(double value) {
-    return value
-        .toStringAsFixed(0)
-        .replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
-        );
-  }
-
-  // Ganti dari Future<void> menjadi Future<List<Map<String, dynamic>>>
-  Future<List<Map<String, dynamic>>> _loadPelangganWithStats(
-    List<Pelanggan> pelangganList,
-  ) async {
-    final service = PelangganService();
-    List<Map<String, dynamic>> result = [];
-
-    for (var pelanggan in pelangganList) {
-      final stats = await service.getPelangganStats(pelanggan.id);
-      result.add({
-        'pelanggan': pelanggan,
-        'total_belanja': stats['total_belanja'],
-        'total_pembelian': stats['total_pembelian'],
-      });
-    }
-
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,9 +138,9 @@ class _PelangganScreenState extends State<PelangganScreen> {
           listener: (context, state) {
             if (state is PelangganLoaded) {
               _lastLoadedPelanggan = state.pelangganList;
-              _loadPelangganWithStats(state.pelangganList);
             }
 
+            // Handle delete success/failure
             if (state is PelangganDeleteSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -192,7 +149,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
                 ),
               );
             }
-
+            
             if (state is PelangganDeleteFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -203,20 +160,23 @@ class _PelangganScreenState extends State<PelangganScreen> {
             }
           },
           builder: (context, state) {
-            // IGNORE ADD/EDIT/DELETE states
-            if (state is PelangganAddInProgress ||
-                state is PelangganAddSuccess ||
+            // IGNORE ADD, EDIT, DELETE states - tampilkan data terakhir
+            if (state is PelangganAddInProgress || 
+                state is PelangganAddSuccess || 
                 state is PelangganAddFailure ||
                 state is PelangganEditInProgress ||
                 state is PelangganEditSuccess ||
                 state is PelangganEditFailure ||
-                state is PelangganDeleteInProgress) {
+                state is PelangganDeleteInProgress ||
+                state is PelangganDeleteSuccess ||
+                state is PelangganDeleteFailure) {
               if (_lastLoadedPelanggan.isNotEmpty) {
                 return _buildPelangganList(_lastLoadedPelanggan);
               }
               return const Center(child: CircularProgressIndicator());
             }
 
+            // NORMAL LOAD STATES
             if (state is PelangganLoading) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -261,7 +221,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
                   ],
                 );
               }
-
+              
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -313,43 +273,27 @@ class _PelangganScreenState extends State<PelangganScreen> {
       return const Center(child: Text('Tidak ada data pelanggan'));
     }
 
-    return FutureBuilder<List<Map<String, dynamic>>>(
-      future: _loadPelangganWithStats(pelangganList),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return ListView.builder(
+      itemCount: pelangganList.length,
+      itemBuilder: (context, index) {
+        final pelanggan = pelangganList[index];
 
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-
-        final pelangganWithStats = snapshot.data ?? [];
-
-        return ListView.builder(
-          itemCount: pelangganWithStats.length,
-          itemBuilder: (context, index) {
-            final item = pelangganWithStats[index];
-            final pelanggan = item['pelanggan'] as Pelanggan;
-
-            return PelangganCard(
-              pelanggan: pelanggan,
-              totalBelanja: item['total_belanja'] as double,
-              totalPembelian: item['total_pembelian'] as int,
-              onActionPressed: (pelanggan, action) {
-                switch (action) {
-                  case 'detail':
-                    _showDetailDialog(pelanggan);
-                    break;
-                  case 'edit':
-                    _showEditDialog(pelanggan);
-                    break;
-                  case 'delete':
-                    _showDeleteDialog(pelanggan);
-                    break;
-                }
-              },
-            );
+        return PelangganCard(
+          pelanggan: pelanggan,
+          totalBelanja: 0.0, // Placeholder values
+          totalPembelian: 0,  // Placeholder values
+          onActionPressed: (pelanggan, action) {
+            switch (action) {
+              case 'detail':
+                _showDetailDialog(pelanggan);
+                break;
+              case 'edit':
+                _showEditDialog(pelanggan);
+                break;
+              case 'delete':
+                _showDeleteDialog(pelanggan);
+                break;
+            }
           },
         );
       },

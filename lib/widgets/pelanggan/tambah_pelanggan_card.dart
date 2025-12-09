@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_cubit.dart';
 import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_state.dart';
 import 'package:fish_it_kasir/config/app_config.dart';
@@ -56,13 +56,10 @@ class _TambahPelangganCardState extends State<TambahPelangganCard> {
       });
 
       try {
-        final createdBy = Supabase.instance.client.auth.currentUser!.id;
-
         await context.read<PelangganCubit>().tambahPelanggan(
           nama: _namaController.text,
           usnRoblox: _usnRobloxController.text,
           noWa: _noWaController.text.isNotEmpty ? _noWaController.text : null,
-          createdBy: createdBy,
         );
       } catch (e) {
         print('❌ Unexpected error: $e');

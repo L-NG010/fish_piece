@@ -31,7 +31,6 @@ class ProdukCubit extends Cubit<ProdukState> {
     required Kelangkaan kelangkaan,
     required double hargaBeli,
     required double hargaJual,
-    required String createdBy,
     XFile? gambarFile,
   }) async {
     emit(ProdukAddInProgress());
@@ -44,7 +43,6 @@ class ProdukCubit extends Cubit<ProdukState> {
         kelangkaan: kelangkaan,
         hargaBeli: hargaBeli,
         hargaJual: hargaJual,
-        createdBy: createdBy,
         gambarFile: gambarFile,
       );
 

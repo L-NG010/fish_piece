@@ -39,7 +39,6 @@ class ProdukService {
     required Kelangkaan kelangkaan,
     required double hargaBeli,
     required double hargaJual,
-    required String createdBy,
     XFile? gambarFile,
   }) async {
     String? gambarUrl;
@@ -99,6 +98,7 @@ class ProdukService {
 
       // === STEP 4: BUAT RIWAYAT STOK AWAL ===
       final totalHarga = hargaBeli * stok;
+      final createdBy = client.auth.currentUser?.id ?? 'system';
 
       await client.from('riwayat_stok').insert({
         'produk_id': insert['id'],

@@ -4,7 +4,7 @@ import 'package:fish_it_kasir/config/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../popup_kelangkaan.dart';
@@ -27,7 +27,7 @@ class _TambahProdukCardState extends State<TambahProdukCard> {
   String? _selectedKategori;
   final _hargaBeliController = TextEditingController();
   final _hargaJualController = TextEditingController();
-  final createdBy = Supabase.instance.client.auth.currentUser!.id;
+
 
   File? _selectedImage;
   final ImagePicker _picker = ImagePicker();
@@ -588,7 +588,7 @@ class _TambahProdukCardState extends State<TambahProdukCard> {
                                             hargaJual: double.parse(
                                               _hargaJualController.text,
                                             ),
-                                            createdBy: createdBy,
+
                                             gambarFile: xFile,
                                           );
                                     } catch (e) {
