@@ -14,5 +14,67 @@
     "password_hint": "Masukkan kata sandi",
     "login_button": "Masuk",
     "fill_fields": "Form tidak boleh kosong"
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "language": "Bahasa",
+    "indonesian": "Indonesia",
+    "english": "Inggris",
+    "min_stock_limit": "Batas Minimal Stok",
+    "min_stock_hint": "Masukkan angka minimal stok",
+    "save": "Simpan",
+    "save_success": "Pengaturan berhasil disimpan"
+  },
+  "dashboard": {
+    "title": "Dasbor",
+    "main": "Dasbor Utama"
+  },
+  "laporan": {
+    "title": "Laporan"
+  },
+  "admin_panel": {
+    "title": "Panel Admin"
+  },
+  "kelola_petugas": {
+    "title": "Kelola Pengguna"
+  },
+  "register": {
+    "title": "Daftar Pengguna"
+  },
+  "auth": {
+    "logout": "Keluar",
+    "logout_confirm_title": "Konfirmasi Keluar",
+    "logout_confirm_message": "Apakah Anda yakin ingin keluar?",
+    "cancel": "Batal"
+  },
+  "pelanggan": {
+    "title": "Pelanggan",
+    "add_customer": "Tambah Pelanggan",
+    "edit_customer": "Edit Pelanggan",
+    "delete_customer": "Hapus Pelanggan",
+    "customer_name": "Nama Pelanggan",
+    "roblox_username": "Username Roblox",
+    "whatsapp_number": "Nomor WhatsApp",
+    "points": "Poin",
+    "no_customers": "Tidak ada data pelanggan",
+    "load_failed": "Gagal memuat pelanggan",
+    "load_error": "Gagal refresh data: {}",
+    "retry": "Coba Lagi"
+  },
+  "produk": {
+    "title": "Produk",
+    "add_product": "Tambah Produk",
+    "edit_product": "Edit Produk",
+    "delete_product": "Hapus Produk",
+    "product_name": "Nama Produk",
+    "price": "Harga",
+    "stock": "Stok",
+    "category": "Kategori",
+    "rarity": "Kelangkaan",
+    "no_products": "Tidak ada produk",
+    "loading": "Memuat produk...",
+    "load_failed": "Gagal memuat produk",
+    "load_error": "Gagal refresh data: {}",
+    "retry": "Coba Lagi"
   }
 }

@@ -11,6 +11,7 @@ import 'package:fish_it_kasir/widgets/popup_kelangkaan.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/beranda/beranda_cubit.dart';
 import '../bloc/beranda/beranda_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class BerandaScreen extends StatefulWidget {
   const BerandaScreen({super.key});
@@ -26,7 +27,9 @@ class _BerandaScreenState extends State<BerandaScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<BerandaCubit>().loadProduk();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<BerandaCubit>().loadProduk();
+    });
   }
 
   List<Produk> _filterProduk(List<Produk> semuaProduk) {
@@ -72,11 +75,10 @@ class _BerandaScreenState extends State<BerandaScreen> {
       backgroundColor: Colors.white,
       drawer: const Sidebar(),
       appBar: CustomAppBar(
-        title: "Beranda",
+        title: "beranda.title".tr(),
         actions: [
           SearchButton(
             onSearch: (value) {
-              // bisa disambungkan ke cubit jika ingin
             },
           ),
           PopupKelangkaan(
@@ -121,7 +123,7 @@ class _BerandaScreenState extends State<BerandaScreen> {
 
                   Expanded(
                     child: produk.isEmpty
-                        ? const Center(child: Text("Tidak ada produk"))
+                        ? Center(child: Text("produk.no_products".tr()))
                         : _buildProductGrid(produk),
                   ),
 

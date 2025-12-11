@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/produk/tambah_produk_card.dart';
 import '../widgets/produk/edit_produk_card.dart';
 import '../widgets/produk/confirm_delete_dialog.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ProdukScreen extends StatefulWidget {
   const ProdukScreen({super.key});
@@ -32,7 +33,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
     context.read<ProdukCubit>().loadProduk();
   }
 
-  // Fungsi untuk menampilkan dialog edit
   void _showEditDialog(Produk produk) {
     showDialog(
       context: context,
@@ -40,7 +40,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
     );
   }
 
-  // Fungsi untuk menampilkan dialog delete konfirmasi
   void _showDeleteDialog(Produk produk) async {
     final confirm = await showConfirmDeleteDialog(
       context: context,
@@ -48,7 +47,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
     );
     
     if (confirm == true && context.mounted) {
-      // Panggil delete dari cubit
       context.read<ProdukCubit>().deleteProduk(produk.id.toString());
     }
   }
@@ -79,7 +77,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
       itemBuilder: (context, index) {
         final product = products[index];
         return ProdukCard(
-          id: product.id.toString(), // Convert int to String
+          id: product.id.toString(),
           nama: product.nama,
           gambarUrl: product.gambarUrl,
           harga: product.hargaJual,
@@ -108,17 +106,16 @@ class _ProdukScreenState extends State<ProdukScreen> {
       backgroundColor: Colors.white,
       drawer: const Sidebar(),
       appBar: CustomAppBar(
-        title: "Produk",
+        title: "produk.title".tr(),
         actions: [
           SearchButton(
             onSearch: (value) {
-              // implementasi search jika diperlukan
             },
           ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: _showTambahProdukDialog,
-            tooltip: 'Tambah Produk',
+            tooltip: 'produk.add_product'.tr(),
           ),
         ],
       ),
@@ -127,12 +124,10 @@ class _ProdukScreenState extends State<ProdukScreen> {
         padding: const EdgeInsets.all(AppConfig.paddingHorizontal),
         child: BlocConsumer<ProdukCubit, ProdukState>(
           listener: (context, state) {
-            // Cache data ketika berhasil load
             if (state is ProdukLoaded) {
               _lastLoadedProduk = state.produk;
             }
             
-            // Handle delete success/failure
             if (state is ProdukDeleteSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -161,7 +156,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
             }
           },
           builder: (context, state) {
-            // IGNORE ADD, EDIT, DELETE states - tampilkan data terakhir
             if (state is ProdukAddInProgress || 
                 state is ProdukAddSuccess || 
                 state is ProdukAddFailure ||
@@ -177,7 +171,6 @@ class _ProdukScreenState extends State<ProdukScreen> {
               return const Center(child: CircularProgressIndicator());
             }
 
-            // NORMAL LOAD STATES
             if (state is ProdukLoading) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -195,7 +188,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Gagal refresh data: ${state.message}',
+                              'produk.load_error'.tr(args: [state.message]),
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.orange,
@@ -224,7 +217,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
                     const Icon(Icons.error_outline, color: Colors.red, size: 48),
                     const SizedBox(height: 16),
                     Text(
-                      'Gagal memuat produk',
+                      'produk.load_failed'.tr(),
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.grey[700],
@@ -244,7 +237,7 @@ class _ProdukScreenState extends State<ProdukScreen> {
                       onPressed: () {
                         context.read<ProdukCubit>().loadProduk(forceReload: true);
                       },
-                      child: const Text('Coba Lagi'),
+                      child: Text('produk.retry'.tr()),
                     ),
                   ],
                 ),
@@ -256,15 +249,15 @@ class _ProdukScreenState extends State<ProdukScreen> {
               return _buildContent(state.produk);
             }
             
-            return const Center(
+            return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CircularProgressIndicator(),
-                  SizedBox(height: 16),
+                  const CircularProgressIndicator(),
+                  const SizedBox(height: 16),
                   Text(
-                    "Memuat produk...",
-                    style: TextStyle(
+                    "produk.loading".tr(),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),
@@ -296,10 +289,10 @@ class _ProdukScreenState extends State<ProdukScreen> {
 
         Expanded(
           child: produk.isEmpty
-              ? const Center(
+              ? Center(
                   child: Text(
-                    "Tidak ada produk",
-                    style: TextStyle(
+                    "produk.no_products".tr(),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
                     ),

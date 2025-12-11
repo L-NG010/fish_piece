@@ -39,7 +39,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           children: [
             const SizedBox(height: 20),
 
-            // ==== CARD PUTIH REGISTRASI ====
             Container(
               width: 360,
               padding: const EdgeInsets.all(24),
@@ -70,7 +69,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   const SizedBox(height: 24),
 
-                  // == EMAIL ==
                   Text("Email", style: textTheme.bodyMedium),
                   const SizedBox(height: 6),
                   TextField(
@@ -90,7 +88,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   const SizedBox(height: 18),
 
-                  // == PASSWORD ==
                   Text("Password", style: textTheme.bodyMedium),
                   const SizedBox(height: 6),
                   TextField(
@@ -123,7 +120,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   const SizedBox(height: 18),
 
-                  // == CONFIRM PASSWORD ==
                   Text("Konfirmasi Password", style: textTheme.bodyMedium),
                   const SizedBox(height: 6),
                   TextField(
@@ -156,7 +152,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                   const SizedBox(height: 28),
 
-                  // == BUTTON REGISTER ==
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

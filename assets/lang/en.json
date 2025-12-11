@@ -10,5 +10,67 @@
     "email_hint": "Enter your email",
     "password_hint": "Enter your password",
     "login_button": "Login"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "indonesian": "Indonesian",
+    "english": "English",
+    "min_stock_limit": "Minimum Stock Limit",
+    "min_stock_hint": "Enter minimum stock amount",
+    "save": "Save",
+    "save_success": "Settings saved successfully"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "main": "Main Dashboard"
+  },
+  "laporan": {
+    "title": "Reports"
+  },
+  "admin_panel": {
+    "title": "Admin Panel"
+  },
+  "kelola_petugas": {
+    "title": "Manage Users"
+  },
+  "register": {
+    "title": "Register User"
+  },
+  "auth": {
+    "logout": "Logout",
+    "logout_confirm_title": "Logout Confirmation",
+    "logout_confirm_message": "Are you sure you want to logout?",
+    "cancel": "Cancel"
+  },
+  "pelanggan": {
+    "title": "Customers",
+    "add_customer": "Add Customer",
+    "edit_customer": "Edit Customer",
+    "delete_customer": "Delete Customer",
+    "customer_name": "Customer Name",
+    "roblox_username": "Roblox Username",
+    "whatsapp_number": "WhatsApp Number",
+    "points": "Points",
+    "no_customers": "No customers available",
+    "load_failed": "Failed to load customers",
+    "load_error": "Failed to refresh data: {}",
+    "retry": "Try Again"
+  },
+  "produk": {
+    "title": "Products",
+    "add_product": "Add Product",
+    "edit_product": "Edit Product",
+    "delete_product": "Delete Product",
+    "product_name": "Product Name",
+    "price": "Price",
+    "stock": "Stock",
+    "category": "Category",
+    "rarity": "Rarity",
+    "no_products": "No products available",
+    "loading": "Loading products...",
+    "load_failed": "Failed to load products",
+    "load_error": "Failed to refresh data: {}",
+    "retry": "Try Again"
   }
 }

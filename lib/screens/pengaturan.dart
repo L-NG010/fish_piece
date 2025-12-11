@@ -3,6 +3,7 @@ import 'package:fish_it_kasir/widgets/appbar.dart';
 import 'package:fish_it_kasir/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PengaturanScreen extends StatefulWidget {
   const PengaturanScreen({super.key});
@@ -12,32 +13,51 @@ class PengaturanScreen extends StatefulWidget {
 }
 
 class _PengaturanScreenState extends State<PengaturanScreen> {
-  String _selectedLanguage = "Indonesia";
+  late String _selectedLanguage;
   final TextEditingController _minimalStokController = TextEditingController(
     text: "10",
   );
 
   @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = '';
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_selectedLanguage.isEmpty) {
+      final currentLocale = context.locale;
+      print('Current locale detected in settings: $currentLocale');
+      _selectedLanguage = currentLocale.languageCode == 'id' ? 'Indonesia' : 'English';
+      print('Selected language set to: $_selectedLanguage');
+    }
+    
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: const Sidebar(),
-      appBar: CustomAppBar(title: "Pengaturan", actions: []),
+      appBar: CustomAppBar(title: "settings.title".tr(), actions: []),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Bahasa",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            Text(
+              "settings.language".tr(),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: _selectedLanguage,
-              items: const [
-                DropdownMenuItem(value: "Indonesia", child: Text("Indonesia")),
-                DropdownMenuItem(value: "English", child: Text("English")),
+              items: [
+                DropdownMenuItem(
+                  value: "Indonesia", 
+                  child: Text("settings.indonesian".tr())
+                ),
+                DropdownMenuItem(
+                  value: "English", 
+                  child: Text("settings.english".tr())
+                ),
               ],
               onChanged: (value) {
                 setState(() {
@@ -59,9 +79,9 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
 
             const SizedBox(height: 28),
 
-            const Text(
-              "Batas Minimal Stok",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            Text(
+              "settings.min_stock_limit".tr(),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 8),
             TextFormField(
@@ -71,7 +91,7 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
                 FilteringTextInputFormatter.digitsOnly,
               ],
               decoration: InputDecoration(
-                hintText: "Masukkan angka minimal stok",
+                hintText: "settings.min_stock_hint".tr(),
                 filled: true,
                 fillColor: Colors.white,
                 contentPadding: const EdgeInsets.symmetric(
@@ -88,13 +108,27 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  // Simpan ke database nanti
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Pengaturan berhasil disimpan"),
-                    ),
-                  );
+                onPressed: () async {
+                  final languageCode = _selectedLanguage == 'Indonesia' ? 'id' : 'en';
+                    
+                    try {
+                      await EasyLocalization.of(context)!.setLocale(Locale(languageCode));
+                      
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("settings.save_success".tr()),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    } catch (e) {
+                      print('Error setting locale: $e');
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error changing language: $e'),
+                          duration: const Duration(seconds: 2),
+                        ),
+                      );
+                    }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.biru,
@@ -103,9 +137,9 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text(
-                  "Simpan",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                child: Text(
+                  "settings.save".tr(),
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ),

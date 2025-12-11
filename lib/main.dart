@@ -14,15 +14,13 @@ import 'config/supabase_config.dart';
 import 'config/app_config.dart';
 
 // Import Bloc
-import 'bloc/language/language_cubit.dart';
-import 'bloc/language/language_state.dart';
 import 'bloc/auth/auth_cubit.dart';
 
 // Import screens
 import 'screens/beranda.dart';
 import 'screens/login.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // 1️⃣ Inisialisasi localization
@@ -31,22 +29,14 @@ Future<void> main() async {
   // 2️⃣ Inisialisasi Supabase (sudah include load .env)
   await SupabaseConfig.initialize();
 
-  // 3️⃣ Jalankan aplikasi dengan pembungkus EasyLocalization dan Bloc
+  // 3️⃣ Jalankan aplikasi dengan pembungkus EasyLocalization
   runApp(
     EasyLocalization(
       supportedLocales: AppConfig.supportedLocales,
       path: AppConfig.translationPath,
       fallbackLocale: AppConfig.fallbackLocale,
-      child: MultiBlocProvider(
-        providers: [
-          BlocProvider(create: (_) => LanguageCubit()),
-          BlocProvider(create: (_) => AuthCubit(AuthService())),
-          BlocProvider(create: (_) => BerandaCubit(ProdukService())),
-          BlocProvider(create: (_) => ProdukCubit(ProdukService())),
-          BlocProvider(create: (_) => PelangganCubit(PelangganService())),
-        ],
-        child: const MyApp(),
-      ),
+      saveLocale: true, // Save the selected locale
+      child: const MyApp(),
     ),
   );
 }
@@ -56,25 +46,38 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LanguageCubit, LanguageState>(
-      builder: (context, state) {
-        return MaterialApp(
-          title: AppConfig.appTitle,
-          debugShowCheckedModeBanner: AppConfig.showDebugBanner,
-          theme: ThemeData(fontFamily: 'Poppins'),
-          locale: state.locale,
-          supportedLocales: context.supportedLocales,
-          localizationsDelegates: context.localizationDelegates,
-          home: BlocBuilder<AuthCubit, AuthState>(
-            builder: (context, state) {
-              if (state is AuthSuccess) {
-                return const BerandaScreen();
-              }
-              return const LoginPage();
-            },
-          ),
-        );
-      },
+    print('Current locale in main app: ${context.locale}');
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AuthCubit(AuthService())),
+        BlocProvider(create: (_) => BerandaCubit(ProdukService())),
+        BlocProvider(create: (_) => ProdukCubit(ProdukService())),
+        BlocProvider(create: (_) => PelangganCubit(PelangganService())),
+      ],
+      child: MaterialApp(
+        title: AppConfig.appTitle,
+        debugShowCheckedModeBanner: AppConfig.showDebugBanner,
+        theme: ThemeData(fontFamily: 'Poppins'),
+        locale: context.locale,
+        supportedLocales: context.supportedLocales,
+        localizationsDelegates: context.localizationDelegates,
+        home: BlocBuilder<AuthCubit, AuthState>(
+          builder: (context, state) {
+            if (state is AuthSuccess) {
+              // Use a navigator to maintain navigation stack
+              return Navigator(
+                onGenerateRoute: (settings) {
+                  return MaterialPageRoute(
+                    builder: (context) => const BerandaScreen(),
+                    settings: settings,
+                  );
+                },
+              );
+            }
+            return const LoginPage();
+          },
+        ),
+      ),
     );
   }
 }

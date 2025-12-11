@@ -15,7 +15,6 @@ class KelolaPetugasScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Search Bar
             Container(
               margin: const EdgeInsets.only(bottom: 16),
               decoration: BoxDecoration(
@@ -43,7 +42,6 @@ class KelolaPetugasScreen extends StatelessWidget {
               ),
             ),
 
-            // List Petugas
             Expanded(
               child: ListView.builder(
                 itemCount: 5,
@@ -83,7 +81,6 @@ class KelolaPetugasScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // Header Row
           Row(
             children: [
               Container(
@@ -174,7 +171,6 @@ class KelolaPetugasScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          // Stats Row
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
             decoration: BoxDecoration(

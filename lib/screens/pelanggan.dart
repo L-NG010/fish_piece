@@ -1,4 +1,3 @@
-// lib/screens/pelanggan_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fish_it_kasir/config/app_config.dart';
@@ -10,6 +9,7 @@ import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_cubit.dart';
 import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_state.dart';
 import 'package:fish_it_kasir/widgets/pelanggan/tambah_pelanggan_card.dart';
 import 'package:fish_it_kasir/widgets/pelanggan/edit_pelanggan_card.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class PelangganScreen extends StatefulWidget {
   const PelangganScreen({super.key});
@@ -122,7 +122,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
       backgroundColor: Colors.white,
       drawer: const Sidebar(),
       appBar: CustomAppBar(
-        title: "Pelanggan",
+        title: "pelanggan.title".tr(),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -198,7 +198,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Gagal refresh data: ${state.message}',
+                              'pelanggan.load_error'.tr(args: [state.message]),
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.orange,
@@ -233,7 +233,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'Gagal memuat pelanggan',
+                      'pelanggan.load_failed'.tr(),
                       style: TextStyle(fontSize: 18, color: Colors.grey[700]),
                     ),
                     const SizedBox(height: 8),
@@ -249,7 +249,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
                           forceReload: true,
                         );
                       },
-                      child: const Text('Coba Lagi'),
+                      child: Text('pelanggan.retry'.tr()),
                     ),
                   ],
                 ),
@@ -270,7 +270,7 @@ class _PelangganScreenState extends State<PelangganScreen> {
 
   Widget _buildPelangganList(List<Pelanggan> pelangganList) {
     if (pelangganList.isEmpty) {
-      return const Center(child: Text('Tidak ada data pelanggan'));
+      return Center(child: Text('pelanggan.no_customers'.tr()));
     }
 
     return ListView.builder(
@@ -280,8 +280,8 @@ class _PelangganScreenState extends State<PelangganScreen> {
 
         return PelangganCard(
           pelanggan: pelanggan,
-          totalBelanja: 0.0, // Placeholder values
-          totalPembelian: 0,  // Placeholder values
+          totalBelanja: 0.0,
+          totalPembelian: 0,
           onActionPressed: (pelanggan, action) {
             switch (action) {
               case 'detail':

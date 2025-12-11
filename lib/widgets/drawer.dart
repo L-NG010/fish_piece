@@ -10,19 +10,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../screens/beranda.dart';
 import '../screens/dashboard.dart';
 import '../screens/pengaturan.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class Sidebar extends StatelessWidget {
   const Sidebar({super.key});
 
   void _navigateWithoutAnimation(BuildContext context, Widget page) {
     Navigator.pop(context); // tutup drawer
-    Navigator.pushReplacement(
+    Navigator.push(
       context,
-      PageRouteBuilder(
-        pageBuilder: (_, __, ___) => page,
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      ),
+      MaterialPageRoute(builder: (context) => page),
     );
   }
 
@@ -38,9 +35,9 @@ class Sidebar extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
             child: Row(
               children: [
-                Image.asset('images/logo.png', width: 100, height: 100),
+                Image.asset('assets/images/logo.png', width: 100, height: 100),
                 const SizedBox(width: 12),
-                Image.asset('images/FishPiece.png', height: 30),
+                Image.asset('assets/images/FishPiece.png', height: 30),
               ],
             ),
           ),
@@ -53,22 +50,22 @@ class Sidebar extends StatelessWidget {
               children: [
                 _buildMenuItem(
                   icon: Icons.home_outlined,
-                  title: "Beranda",
+                  title: "beranda.title".tr(),
                   onTap: () =>
                       _navigateWithoutAnimation(context, BerandaScreen()),
                 ),
 
                 _buildExpandableMenuItem(
                   icon: Icons.dashboard_outlined,
-                  title: "Dashboard",
+                  title: "dashboard.title".tr(),
                   submenu: {
-                    "Dashboard": () {
+                    "dashboard.main".tr(): () {
                       _navigateWithoutAnimation(
                         context,
                         const DashboardScreen(),
                       );
                     },
-                    "Laporan": () {
+                    "laporan.title".tr(): () {
                       _navigateWithoutAnimation(context, const LaporanScreen());
                     },
                   },
@@ -76,7 +73,7 @@ class Sidebar extends StatelessWidget {
 
                 _buildMenuItem(
                   icon: Icons.inventory_2_outlined,
-                  title: "Produk",
+                  title: "produk.title".tr(),
                   onTap: () {
                     _navigateWithoutAnimation(context, ProdukScreen());
                   },
@@ -84,7 +81,7 @@ class Sidebar extends StatelessWidget {
 
                 _buildMenuItem(
                   icon: Icons.people_outline,
-                  title: "Pelanggan",
+                  title: "pelanggan.title".tr(),
                   onTap: () {
                     _navigateWithoutAnimation(context, PelangganScreen());
                   },
@@ -92,12 +89,12 @@ class Sidebar extends StatelessWidget {
 
                 _buildExpandableMenuItem(
                   icon: Icons.admin_panel_settings_outlined,
-                  title: "Admin Panel",
+                  title: "admin_panel.title".tr(),
                   submenu: {
-                    "Kelola Pengguna": () {
+                    "kelola_petugas.title".tr(): () {
                       _navigateWithoutAnimation(context, KelolaPetugasScreen());
                     },
-                    "Registrasi Pengguna": () {
+                    "register.title".tr(): () {
                       _navigateWithoutAnimation(context, RegisterScreen());
                     },
                   },
@@ -105,7 +102,7 @@ class Sidebar extends StatelessWidget {
 
                 _buildMenuItem(
                   icon: Icons.settings_outlined,
-                  title: "Pengaturan",
+                  title: "settings.title".tr(),
                   onTap: () {
                     _navigateWithoutAnimation(context, PengaturanScreen());
                   },
@@ -118,9 +115,9 @@ class Sidebar extends StatelessWidget {
 
           ListTile(
             leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text(
-              "Logout",
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+            title: Text(
+              "auth.logout".tr(),
+              style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
             ),
             onTap: () {
               showDialog(
@@ -200,16 +197,16 @@ class _LogoutConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text("Konfirmasi Logout"),
-      content: const Text("Apakah Paduka yakin ingin keluar dari aplikasi?"),
+      title: Text("auth.logout_confirm_title".tr()),
+      content: Text("auth.logout_confirm_message".tr()),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text("Batal"),
+          child: Text("auth.cancel".tr()),
         ),
         TextButton(
           onPressed: onConfirm,
-          child: const Text("Logout", style: TextStyle(color: Colors.red)),
+          child: Text("auth.logout".tr(), style: const TextStyle(color: Colors.red)),
         ),
       ],
     );

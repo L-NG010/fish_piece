@@ -9,7 +9,7 @@ class AppConfig {
   ];
 
   static const Locale fallbackLocale = Locale('en');
-  static const String translationPath = 'lang';
+  static const String translationPath = 'assets/lang';
 
   static const String appTitle = 'Fish It Kasir';
   static const bool showDebugBanner = false;

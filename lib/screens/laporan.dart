@@ -24,7 +24,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
         actions: [
           SearchButton(
             onSearch: (value) {
-              // nanti
             },
           ),
         ],
@@ -35,7 +34,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // === Filter Dropdown + Input Date ===
               Row(
                 children: [
                   Expanded(
@@ -94,7 +92,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
               ),
               const SizedBox(height: 14),
 
-              // === Tombol Cetak ===
               Align(
                 alignment: Alignment.centerLeft,
                 child: ElevatedButton.icon(
@@ -118,7 +115,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
 
               const SizedBox(height: 20),
 
-              // === KPI ===
               Row(
                 children: [
                   Expanded(
@@ -160,7 +156,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
 
               const SizedBox(height: 28),
 
-              // === Riwayat Transaksi Title ===
               const Text(
                 "Riwayat Transaksi",
                 style: TextStyle(
@@ -171,7 +166,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
               ),
               const SizedBox(height: 12),
 
-              // === Riwayat Transaksi Cards (contoh panggilannya) ===
               RiwayatCard(
                 nama: "Lnata",
                 produk: "Elshark Gran Maja x2",
@@ -204,7 +198,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
 
               const SizedBox(height: 32),
 
-              // === Riwayat Perubahan Stok Title ===
               const Text(
                 "Riwayat Perubahan Stok",
                 style: TextStyle(
@@ -215,7 +208,6 @@ class _LaporanScreenState extends State<LaporanScreen> {
               ),
               const SizedBox(height: 12),
 
-              // === Riwayat Perubahan Stok Card ===
               RiwayatCard(
                 produk: "Elshark Gran Maja 10 → 12",
                 biaya: "Rp 120.000,00",

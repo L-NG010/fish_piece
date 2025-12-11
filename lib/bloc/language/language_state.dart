@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-class LanguageState {
+abstract class LanguageState {}
+
+class LanguageInitial extends LanguageState {
   final Locale locale;
-  const LanguageState(this.locale);
+  LanguageInitial(this.locale);
 }

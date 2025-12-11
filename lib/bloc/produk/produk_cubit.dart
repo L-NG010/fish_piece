@@ -23,7 +23,7 @@ class ProdukCubit extends Cubit<ProdukState> {
     }
   }
 
-  // Tambah produk (untuk dialog)
+  // Tambah produk (untuk dialog)e
   Future<void> tambahProduk({
     required String nama,
     required int stok,

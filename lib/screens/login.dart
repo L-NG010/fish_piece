@@ -76,11 +76,10 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset('images/logo.png', width: 250, height: 153),
-              Image.asset('images/FishPiece.png', width: 194, height: 60),
+              Image.asset('assets/images/logo.png', width: 250, height: 153),
+              Image.asset('assets/images/FishPiece.png', width: 194, height: 60),
               const SizedBox(height: 20),
 
-              // CARD PUTIH LOGIN
               Container(
                 width: 360,
                 padding: const EdgeInsets.all(24),
@@ -102,7 +101,6 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     const SizedBox(height: 24),
 
-                    /// == EMAIL ==
                     Text("login.email".tr(), style: textTheme.bodyMedium),
                     const SizedBox(height: 6),
                     TextField(
@@ -123,7 +121,6 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 18),
 
-                    /// == PASSWORD ==
                     Text("login.password".tr(), style: textTheme.bodyMedium),
                     const SizedBox(height: 6),
                     TextField(
@@ -158,7 +155,6 @@ class _LoginPageState extends State<LoginPage> {
 
                     const SizedBox(height: 28),
 
-                    /// == BUTTON LOGIN ==
                     BlocBuilder<AuthCubit, AuthState>(
                       builder: (context, state) {
                         final loading = state is AuthLoading;
