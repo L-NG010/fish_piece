@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../models/produk.dart';
 import '../config/app_config.dart';
@@ -21,13 +22,13 @@ class _KategoriFilterState extends State<KategoriFilter> {
   String _formatNamaKategori(Kategori kategori) {
     switch (kategori) {
       case Kategori.ikan:
-        return 'Ikan';
+        return "category.fish".tr();
       case Kategori.joran:
-        return 'Joran';
+        return "category.rod".tr();
       case Kategori.kapal:
-        return 'Kapal';
+        return "category.ship".tr();
       case Kategori.item:
-        return 'Item';
+        return "category.item".tr();
     }
   }
 
@@ -58,7 +59,7 @@ class _KategoriFilterState extends State<KategoriFilter> {
                   ),
                 ),
                 child: Text(
-                  'Semua',
+                  "category.all".tr(),
                   style: TextStyle(
                     fontWeight: widget.kategoriTerpilih == null
                         ? FontWeight.w600

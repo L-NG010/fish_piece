@@ -113,7 +113,7 @@ class ProdukService {
         try {
           await client.storage.from('produk').remove([uploadedFileName]);
         } catch (deleteError) {
-          print('⚠️ Gagal rollback gambar: $deleteError');
+
         }
       }
 
@@ -243,7 +243,6 @@ class ProdukService {
         try {
           await client.storage.from('produk').remove([uploadedFileName]);
         } catch (deleteError) {
-          print('⚠️ Gagal rollback gambar: $deleteError');
         }
       }
 
@@ -268,7 +267,6 @@ class ProdukService {
         try {
           await client.storage.from('produk').remove([fileName]);
         } catch (e) {
-          print('⚠️ Gagal hapus gambar: $e');
         }
       }
 

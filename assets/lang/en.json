@@ -72,5 +72,12 @@
     "load_failed": "Failed to load products",
     "load_error": "Failed to refresh data: {}",
     "retry": "Try Again"
+  },
+  "category":{
+    "all" : "All",
+    "fish" : "Fish",
+    "rod" : "Rod",
+    "item" : "Item",
+    "ship" : "Ship"
   }
 }

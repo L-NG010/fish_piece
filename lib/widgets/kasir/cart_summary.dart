@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../config/app_config.dart';
+import '../../config/app_config.dart';
+import './payment_dialog.dart';
 
 class CartSummary extends StatelessWidget {
   final double totalHarga;
@@ -17,7 +18,7 @@ class CartSummary extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 10),
       child: Container(
         width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: AppConfig.paddingHorizontal, vertical: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
@@ -34,7 +35,14 @@ class CartSummary extends StatelessWidget {
           children: [
             Icon(Icons.shopping_cart_outlined, size: 24, color: AppColors.biru),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return DialogPembayaran(harga: totalHarga);
+                  },
+                );
+              },
               style: ElevatedButton.styleFrom(backgroundColor: AppColors.biru),
               child: Text(
                 _formatHarga(totalHarga),

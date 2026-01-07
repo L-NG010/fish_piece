@@ -1,5 +1,5 @@
 import 'package:fish_it_kasir/config/app_config.dart';
-import 'package:fish_it_kasir/widgets/cart_summary.dart';
+import 'package:fish_it_kasir/widgets/kasir/cart_summary.dart';
 import 'package:flutter/material.dart';
 import '../models/produk.dart';
 import '../widgets/produk_card.dart';
@@ -13,14 +13,14 @@ import '../bloc/beranda/beranda_cubit.dart';
 import '../bloc/beranda/beranda_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 
-class BerandaScreen extends StatefulWidget {
-  const BerandaScreen({super.key});
+class KasirScreen extends StatefulWidget {
+  const KasirScreen({super.key});
 
   @override
-  State<BerandaScreen> createState() => _BerandaScreenState();
+  State<KasirScreen> createState() => _KasirScreenState();
 }
 
-class _BerandaScreenState extends State<BerandaScreen> {
+class _KasirScreenState extends State<KasirScreen> {
   Kategori? _kategoriTerpilih;
   String? _selectedKelangkaan;
 

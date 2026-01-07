@@ -28,9 +28,7 @@ class _PengaturanScreenState extends State<PengaturanScreen> {
   Widget build(BuildContext context) {
     if (_selectedLanguage.isEmpty) {
       final currentLocale = context.locale;
-      print('Current locale detected in settings: $currentLocale');
       _selectedLanguage = currentLocale.languageCode == 'id' ? 'Indonesia' : 'English';
-      print('Selected language set to: $_selectedLanguage');
     }
     
     return Scaffold(

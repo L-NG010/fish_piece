@@ -7,7 +7,7 @@ import 'package:fish_it_kasir/screens/produk.dart';
 import 'package:fish_it_kasir/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../screens/beranda.dart';
+import '../screens/kasir.dart';
 import '../screens/dashboard.dart';
 import '../screens/pengaturan.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,9 +17,16 @@ class Sidebar extends StatelessWidget {
 
   void _navigateWithoutAnimation(BuildContext context, Widget page) {
     Navigator.pop(context); // tutup drawer
-    Navigator.push(
+     Navigator.pushReplacement(
+
       context,
-      MaterialPageRoute(builder: (context) => page),
+
+      PageRouteBuilder(
+        pageBuilder: (_, __, ___) => page,
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero,
+      ),
+
     );
   }
 
@@ -52,7 +59,7 @@ class Sidebar extends StatelessWidget {
                   icon: Icons.home_outlined,
                   title: "beranda.title".tr(),
                   onTap: () =>
-                      _navigateWithoutAnimation(context, BerandaScreen()),
+                      _navigateWithoutAnimation(context, KasirScreen()),
                 ),
 
                 _buildExpandableMenuItem(

@@ -1,10 +1,12 @@
 import 'package:fish_it_kasir/bloc/auth/auth_state.dart';
 import 'package:fish_it_kasir/bloc/beranda/beranda_cubit.dart';
 import 'package:fish_it_kasir/bloc/pelanggan/pelanggan_cubit.dart';
+import 'package:fish_it_kasir/bloc/dashboard/dashboard_cubit.dart';
 import 'package:fish_it_kasir/bloc/produk/produk_cubit.dart';
 import 'package:fish_it_kasir/services/auth_service.dart';
 import 'package:fish_it_kasir/services/pelanggan.dart';
 import 'package:fish_it_kasir/services/produk.dart';
+import 'package:fish_it_kasir/services/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,7 +19,7 @@ import 'config/app_config.dart';
 import 'bloc/auth/auth_cubit.dart';
 
 // Import screens
-import 'screens/beranda.dart';
+import 'screens/kasir.dart';
 import 'screens/login.dart';
 
 void main() async {
@@ -53,6 +55,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => BerandaCubit(ProdukService())),
         BlocProvider(create: (_) => ProdukCubit(ProdukService())),
         BlocProvider(create: (_) => PelangganCubit(PelangganService())),
+        BlocProvider(create: (_) => DashboardCubit(DashboardService())),
       ],
       child: MaterialApp(
         title: AppConfig.appTitle,
@@ -68,7 +71,7 @@ class MyApp extends StatelessWidget {
               return Navigator(
                 onGenerateRoute: (settings) {
                   return MaterialPageRoute(
-                    builder: (context) => const BerandaScreen(),
+                    builder: (context) => const KasirScreen(),
                     settings: settings,
                   );
                 },

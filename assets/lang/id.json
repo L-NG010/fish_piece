@@ -76,5 +76,12 @@
     "load_failed": "Gagal memuat produk",
     "load_error": "Gagal refresh data: {}",
     "retry": "Coba Lagi"
+  },
+  "category":{
+    "all" : "Semua",
+    "fish" : "Ikan",
+    "rod" : "Joran",
+    "item" : "Item",
+    "ship" : "kapal"
   }
 }

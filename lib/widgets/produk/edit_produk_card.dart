@@ -162,7 +162,6 @@ class _EditProdukCardState extends State<EditProdukCard> {
           );
         }
 
-        print('🚀 Memulai edit produk...');
 
         await context.read<ProdukCubit>().editProduk(
           produkId: widget.produk.id.toString(),
@@ -176,7 +175,6 @@ class _EditProdukCardState extends State<EditProdukCard> {
           hapusGambar: _hapusGambar,
         );
       } catch (e) {
-        print('❌ Unexpected error: $e');
         setState(() {
           _isUploading = false;
         });
@@ -191,11 +189,8 @@ class _EditProdukCardState extends State<EditProdukCard> {
       listenWhen: (previous, current) =>
           current is ProdukEditSuccess || current is ProdukEditFailure,
       listener: (context, state) {
-        print('🎯 Edit Dialog Listener: ${state.runtimeType}');
-        print('🎯 mounted: ${mounted}');
 
         if (state is ProdukEditSuccess) {
-          print('✅ Edit Success - menutup dialog');
 
           if (mounted) {
             setState(() {
@@ -205,20 +200,16 @@ class _EditProdukCardState extends State<EditProdukCard> {
 
           final navigator = Navigator.of(context);
           if (navigator.canPop()) {
-            print('✅ Navigator canPop, closing dialog...');
             navigator.pop(true);
-            print('✅ Dialog closed');
 
             Future.microtask(() {
               _showSuccessNotification(state.message);
             });
           } else {
-            print('❌ Navigator cannot pop');
           }
         }
 
         if (state is ProdukEditFailure) {
-          print('❌ Edit Failure: ${state.message}');
 
           if (mounted) {
             setState(() {

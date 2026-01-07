@@ -109,11 +109,8 @@ class _TambahProdukCardState extends State<TambahProdukCard> {
       listenWhen: (previous, current) =>
           current is ProdukAddSuccess || current is ProdukAddFailure,
       listener: (context, state) {
-        print('🎯 Dialog Listener: ${state.runtimeType}');
-        print('🎯 mounted: ${mounted}');
 
         if (state is ProdukAddSuccess) {
-          print('✅ Success - menutup dialog');
 
           // Reset loading state
           if (mounted) {
@@ -125,21 +122,17 @@ class _TambahProdukCardState extends State<TambahProdukCard> {
           // Tutup dialog TERLEBIH DAHULU
           final navigator = Navigator.of(context);
           if (navigator.canPop()) {
-            print('✅ Navigator canPop, closing dialog...');
             navigator.pop(true);
-            print('✅ Dialog closed');
 
             // Tampilkan notifikasi setelah dialog tertutup
             Future.microtask(() {
               _showSuccessNotification(state.message);
             });
           } else {
-            print('❌ Navigator cannot pop');
           }
         }
 
         if (state is ProdukAddFailure) {
-          print('❌ Failure: ${state.message}');
 
           // Set loading false
           if (mounted) {
@@ -565,7 +558,6 @@ class _TambahProdukCardState extends State<TambahProdukCard> {
                                         );
                                       }
 
-                                      print('🚀 Memulai tambah produk...');
 
                                       // Panggil cubit (listener akan handle success/failure)
                                       await context
@@ -592,7 +584,6 @@ class _TambahProdukCardState extends State<TambahProdukCard> {
                                             gambarFile: xFile,
                                           );
                                     } catch (e) {
-                                      print('❌ Unexpected error: $e');
                                       setState(() {
                                         _isUploading = false;
                                       });

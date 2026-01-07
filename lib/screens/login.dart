@@ -4,7 +4,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/auth/auth_cubit.dart';
 import '../bloc/auth/auth_state.dart';
-import 'beranda.dart';
+import 'kasir.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -64,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
         if (state is AuthSuccess) {
           // Navigasi ke beranda, menggantikan halaman login
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute<void>(builder: (_) => const BerandaScreen()),
+            MaterialPageRoute<void>(builder: (_) => const KasirScreen()),
           );
         } else if (state is AuthError) {
           _showErrorSnackBar(state.message);
