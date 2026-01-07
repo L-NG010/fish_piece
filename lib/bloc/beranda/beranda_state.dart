@@ -12,16 +12,20 @@ class BerandaLoading extends BerandaState {}
 
 class BerandaLoaded extends BerandaState {
   final List<Produk> produk;
-  BerandaLoaded(this.produk);
+  final int cartUpdateCounter; // Tambahkan counter untuk memicu rebuild
+  
+  BerandaLoaded(this.produk, {this.cartUpdateCounter = 0});
 
   @override
-  List<Object?> get props => [produk];
+  List<Object?> get props => [produk, cartUpdateCounter];
 }
 
 class BerandaError extends BerandaState {
   final String message;
-  BerandaError(this.message);
+  final int cartUpdateCounter; // Tambahkan counter untuk memicu rebuild
+  
+  BerandaError(this.message, {this.cartUpdateCounter = 0});
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, cartUpdateCounter];
 }

@@ -1,6 +1,8 @@
 import 'package:fish_it_kasir/config/app_config.dart';
 import 'package:fish_it_kasir/models/produk.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/beranda/beranda_cubit.dart';
 
 class ProdukCard extends StatelessWidget {
   final String id; // Tambahkan id
@@ -176,10 +178,69 @@ class ProdukCard extends StatelessWidget {
                   constraints: const BoxConstraints(),
                 ),
               ] else ...[
-                Icon(
-                  Icons.shopping_cart_outlined,
-                  size: 14,
-                  color: AppColors.biru,
+                Builder(
+                  builder: (context) {
+                    final currentCubit = context.watch<BerandaCubit>();
+                    final quantity = currentCubit.getQuantityById(int.parse(id));
+                    
+                    return Stack(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            // Ambil produk saat ini dan tambahkan ke keranjang
+                            final produk = Produk(
+                              id: int.parse(id),
+                              nama: nama,
+                              kategori: kelangkaan == Kelangkaan.rare ? Kategori.ikan : 
+                                        kelangkaan == Kelangkaan.epic ? Kategori.joran : 
+                                        kelangkaan == Kelangkaan.legendary ? Kategori.kapal : Kategori.item,
+                              kelangkaan: kelangkaan,
+                              hargaBeli: hargaBeli ?? 0,
+                              hargaJual: harga,
+                              stok: stok,
+                              gambarUrl: gambarUrl,
+                            );
+                            
+                            // Tambahkan produk ke keranjang
+                            context.read<BerandaCubit>().addToCart(produk, 1);
+                          },
+                          icon: Icon(
+                            Icons.shopping_cart_outlined,
+                            size: 14,
+                            color: AppColors.biru,
+                          ),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        if (quantity > 0)
+                          Positioned(
+                            top: -8,  // Naikkan lebih jauh agar tidak terpotong
+                            right: -8, // Geser lebih jauh ke kanan agar tidak terpotong
+                            child: Container(
+                              padding: const EdgeInsets.all(3), // Tambahkan sedikit padding
+                              decoration: BoxDecoration(
+                                color: AppColors.biru,
+                                borderRadius: BorderRadius.circular(10), // Lebih bulat
+                                border: Border.all(color: Colors.white, width: 1), // Tambahkan border putih agar tidak terpotong
+                              ),
+                              constraints: const BoxConstraints(
+                                minWidth: 18,
+                                minHeight: 18,
+                              ),
+                              child: Text(
+                                quantity.toString(),
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  }
                 ),
               ],
             ],

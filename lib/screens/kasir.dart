@@ -127,7 +127,7 @@ class _KasirScreenState extends State<KasirScreen> {
                         : _buildProductGrid(produk),
                   ),
 
-                  CartSummary(totalHarga: 145000),
+                  const CartSummary(),
                 ],
               );
             }
