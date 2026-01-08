@@ -73,18 +73,23 @@ class CartSummary extends StatelessWidget {
                                   child: CartItemsList(),
                                 ),
                                 const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Total:",
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      _formatHarga(context.read<BerandaCubit>().getTotalHarga()),
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
+                                // Menambahkan BlocBuilder untuk total harga agar real-time
+                                BlocBuilder<BerandaCubit, BerandaState>(
+                                  builder: (context, state) {
+                                    return Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          "Total:",
+                                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          _formatHarga(context.read<BerandaCubit>().getTotalHarga()),
+                                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    );
+                                  }
                                 ),
                                 const SizedBox(height: 10),
                                 ElevatedButton(

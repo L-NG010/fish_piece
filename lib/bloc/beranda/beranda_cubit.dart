@@ -40,16 +40,29 @@ class BerandaCubit extends Cubit<BerandaState> {
     // Cek apakah produk sudah ada di keranjang
     final existingItemIndex = _cartItems.indexWhere((item) => item['id'] == produk.id);
     
+    int newQuantity = quantity;
     if (existingItemIndex != -1) {
       // Jika sudah ada, tambahkan kuantitasnya
-      _cartItems[existingItemIndex]['quantity'] += quantity;
+      newQuantity = _cartItems[existingItemIndex]['quantity'] + quantity;
+    }
+    
+    // Validasi stok sebelum menambahkan ke keranjang
+    if (newQuantity > produk.stok) {
+      // Tampilkan error atau tidak lakukan apa-apa
+      return;
+    }
+    
+    if (existingItemIndex != -1) {
+      // Update kuantitas item yang sudah ada
+      _cartItems[existingItemIndex]['quantity'] = newQuantity;
     } else {
-      // Jika belum ada, tambahkan sebagai item baru
+      // Tambahkan sebagai item baru
       _cartItems.add({
         'id': produk.id,
         'nama': produk.nama,
         'harga': produk.hargaJual,
         'quantity': quantity,
+        'stok': produk.stok, // Simpan stok produk untuk validasi
       });
     }
     // Update state dengan counter baru
@@ -65,9 +78,23 @@ class BerandaCubit extends Cubit<BerandaState> {
   void increaseQuantity(int productId) {
     final itemIndex = _cartItems.indexWhere((item) => item['id'] == productId);
     if (itemIndex != -1) {
-      _cartItems[itemIndex]['quantity'] += 1;
-      // Update state dengan counter baru
-      _emitCurrentState();
+      // Ambil produk dari state untuk mendapatkan informasi stok
+      if (state is BerandaLoaded) {
+        final produkList = (state as BerandaLoaded).produk;
+        final produk = produkList.firstWhere((p) => p.id == productId, orElse: () => produkList.first);
+        
+        // Cek apakah kuantitas yang diminta melebihi stok
+        if (_cartItems[itemIndex]['quantity'] < produk.stok) {
+          _cartItems[itemIndex]['quantity'] += 1;
+          // Update state dengan counter baru
+          _emitCurrentState();
+        }
+      } else {
+        // Jika state bukan BerandaLoaded, kita tetap tambahkan kuantitas jika memungkinkan
+        // Tapi tanpa validasi stok yang akurat
+        _cartItems[itemIndex]['quantity'] += 1;
+        _emitCurrentState();
+      }
     }
   }
 

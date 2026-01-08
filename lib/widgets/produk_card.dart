@@ -184,6 +184,7 @@ class ProdukCard extends StatelessWidget {
                     final quantity = currentCubit.getQuantityById(int.parse(id));
                     
                     return Stack(
+                      clipBehavior: Clip.none, // Izinkan child untuk tumpang tindih di luar batas
                       children: [
                         IconButton(
                           onPressed: () {
@@ -201,6 +202,19 @@ class ProdukCard extends StatelessWidget {
                               gambarUrl: gambarUrl,
                             );
                             
+                            // Cek apakah stok mencukupi sebelum menambahkan ke keranjang
+                            int currentQuantity = currentCubit.getQuantityById(produk.id);
+                            if (currentQuantity >= produk.stok) {
+                              // Tampilkan snackbar jika stok tidak mencukupi
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Stok tidak mencukupi! Tersisa: ${produk.stok}"),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                              return;
+                            }
+                            
                             // Tambahkan produk ke keranjang
                             context.read<BerandaCubit>().addToCart(produk, 1);
                           },
@@ -214,18 +228,18 @@ class ProdukCard extends StatelessWidget {
                         ),
                         if (quantity > 0)
                           Positioned(
-                            top: -8,  // Naikkan lebih jauh agar tidak terpotong
-                            right: -8, // Geser lebih jauh ke kanan agar tidak terpotong
+                            top: -10,  // Posisi lebih atas dari icon
+                            right: -10, // Posisi lebih kanan dari icon
                             child: Container(
-                              padding: const EdgeInsets.all(3), // Tambahkan sedikit padding
+                              padding: const EdgeInsets.all(2),
                               decoration: BoxDecoration(
                                 color: AppColors.biru,
-                                borderRadius: BorderRadius.circular(10), // Lebih bulat
-                                border: Border.all(color: Colors.white, width: 1), // Tambahkan border putih agar tidak terpotong
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.white, width: 1),
                               ),
                               constraints: const BoxConstraints(
-                                minWidth: 18,
-                                minHeight: 18,
+                                minWidth: 16,
+                                minHeight: 16,
                               ),
                               child: Text(
                                 quantity.toString(),
